@@ -5,6 +5,10 @@ const courseSchema = new Schema({
     required: true,
     type: String,
   },
+  subtitle: {
+    required: true,
+    type: String,
+  },
   description: {
     required: true,
     type: String,
@@ -28,16 +32,22 @@ const courseSchema = new Schema({
     type: Schema.ObjectId, ref: "Category"
   },
   instructor: {
-     type: Schema.ObjectId, ref: "User"
+    type: Schema.ObjectId, ref: "User"
   },
-  quizzes: {
-    required: false,
-    type: Schema.ObjectId,
+  quizSet: { type: Schema.ObjectId, ref: "Quizset" },
+  testimonials: [{ type: Schema.ObjectId, ref: "Testimonial" }],
+  learning: {
+    required: true,
+    type: String,
   },
-  testimonials: [{
+  createdOn: {
+    required: true,
     type: Date,
-    default: Date.now,
-  }],
+  },
+  modifiedOn: {
+    required: true,
+    type: Date
+  }
 });
 
 export const Course = mongoose.models.Course ?? mongoose.model("Course", courseSchema);
