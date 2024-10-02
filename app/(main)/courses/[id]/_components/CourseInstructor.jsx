@@ -54,7 +54,7 @@ const CourseInstructor = async ({course}) => {
                 </div>
             </div>
             <p className="text-gray-600">
-                {course?.bio}
+                {instructor?.bio}
             </p>
         </div>
     );

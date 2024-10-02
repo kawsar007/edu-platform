@@ -27,7 +27,7 @@ const CourseCurriculam = ({ course }) => {
         collapsible
         className='w-full'>
         {course?.modules &&
-          course?.modules.map((module) => <CourseModuleList module={module} />)}
+          course?.modules.map((module) => <CourseModuleList key={module.id} module={module} />)}
       </Accordion>
     </>
   );

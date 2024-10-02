@@ -5,6 +5,7 @@ import { Module } from "@/model/module.model";
 import { Testimonial } from "@/model/testimonial-model";
 import { User } from "@/model/user-model";
 import { getEnrollmentsForCourse } from "./enrollments";
+import { getTestimonialsForCourse } from "./testimonials";
 
 export async function getCourseList() {
   const courses = await Course.find({}).select(["title", "thumbnail", "modules", "price", "category", "instructor"]).populate({
@@ -56,10 +57,25 @@ export async function getCourseDetailsByInstructor(instructorId) {
   )
   const totalEnrollments = enrollments.reduce((item, currentValue) => {
     return item.length + currentValue.length;
-  })  
+  })
+
+  const testimonials = await Promise.all(
+    courses.map(async (course) => {
+      const testimonial = await getTestimonialsForCourse(course._id.toString());
+      return testimonial;
+    })
+  );
+
+  const totalTestimonials = testimonials.flat();
+  const avgRating = (totalTestimonials.reduce((acc, item) => acc + item.rating, 0) / totalTestimonials.length).toFixed(2);
+
+  console.log("Average rating", avgRating);
+  
 
   return {
     "courses": courses.length,
-    "enrollments": totalEnrollments
+    "enrollments": totalEnrollments,
+    "reviews": totalTestimonials.length,
+    "ratings": avgRating,
   }
 }
