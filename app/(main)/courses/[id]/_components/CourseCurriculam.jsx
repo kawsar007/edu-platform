@@ -25,9 +25,12 @@ const CourseCurriculam = ({ course }) => {
         defaultValue={["item-1", "item-2", "item-3"]}
         type='multiple'
         collapsible
+        
         className='w-full'>
         {course?.modules &&
-          course?.modules.map((module) => <CourseModuleList key={module.id} module={module} />)}
+          course?.modules.map((module) => (
+            <CourseModuleList key={module.id} module={module} />
+          ))}
       </Accordion>
     </>
   );
