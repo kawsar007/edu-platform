@@ -1,7 +1,7 @@
 import {
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger
+    AccordionContent,
+    AccordionItem,
+    AccordionTrigger
 } from "@/components/ui/accordion";
 
 import { Video } from "lucide-react";
@@ -25,7 +25,7 @@ const CourseModuleList = ({module}) => {
               <div className="space-y-3">
                   {
                       module?.lessonIds && module?.lessonIds.map(lessonId => (
-                          <CourseLessonList lessonId={lessonId} />
+                          <CourseLessonList lessonId={lessonId} key={lessonId.id}/>
                       ))
                   }
 
