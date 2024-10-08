@@ -1,23 +1,20 @@
 "use client";
 
-import { useState } from "react";
-import Link from "next/link";
 import { cn } from "@/lib/utils";
+import Link from "next/link";
+import { useState } from "react";
 
 import { MobileNav } from "@/components/mobile-nav";
+import { Menu, X } from "lucide-react";
 import { Logo } from "./logo";
-import Image from "next/image";
-import { X } from "lucide-react";
-import { Command } from "lucide-react";
+import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { Button, buttonVariants } from "./ui/button";
-import { Menu } from "lucide-react";
 import {
 	DropdownMenu,
 	DropdownMenuContent,
 	DropdownMenuItem,
 	DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
-import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 export function MainNav({ items, children }) {
 	const [showMobileMenu, setShowMobileMenu] = useState(false);
 
@@ -61,10 +58,10 @@ export function MainNav({ items, children }) {
 						</DropdownMenuTrigger>
 						<DropdownMenuContent align="end" className="w-56 mt-4">
 							<DropdownMenuItem className="cursor-pointer">
-								<Link href="">Student</Link>
+								<Link href="/register/student">Student</Link>
 							</DropdownMenuItem>
 							<DropdownMenuItem className="cursor-pointer">
-								<Link href="">Instructor</Link>
+								<Link href="/register/instructor">Instructor</Link>
 							</DropdownMenuItem>
 						</DropdownMenuContent>
 					</DropdownMenu>
