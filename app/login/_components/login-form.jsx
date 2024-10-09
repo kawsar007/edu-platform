@@ -13,8 +13,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
-// import { ceredntialLogin } from "@/app/actions";
-
+import { credientialLogin } from "@/app/actions";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
@@ -23,23 +22,25 @@ export function LoginForm() {
   const [error, setError] = useState('');
   const router = useRouter();
 
-  // async function onSubmit(event) {
-  //   event.preventDefault();
+  async function onSubmit(event) {
+    event.preventDefault();
 
-  //   try {
-  //     const formData = new FormData(event.currentTarget);
-  //     const response = await ceredntialLogin(formData);
+    try {
+      const formData = new FormData(event.currentTarget);
+      const response = await credientialLogin(formData);
 
-  //     if (!!response.error) {
-  //       console.error(response.error)
-  //       setError(response.error);
-  //     } else {
-  //       router.push("/courses");
-  //     }
-  //   } catch (e) {
-  //     setError(e.message);
-  //   }
-  // }
+      console.log("response", response);
+
+      if (!!response.error) {
+        console.error(response.error)
+        setError(response.error);
+      } else {
+        router.push("/courses");
+      }
+    } catch (e) {
+      setError(e.message);
+    }
+  }
 
   return (
     <Card className="mx-auto max-w-sm w-full">
@@ -50,7 +51,7 @@ export function LoginForm() {
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <form>
+        <form onSubmit={onSubmit}>
           <div className="grid gap-4">
             <div className="grid gap-2">
               <Label htmlFor="email">Email</Label>
