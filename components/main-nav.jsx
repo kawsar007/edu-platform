@@ -27,7 +27,6 @@ export function MainNav({ items, children }) {
   console.log(loginSession);
 
   useEffect(() => {
-    console.log("Test");
     setLoginSession(session);
   }, [session]);
 
