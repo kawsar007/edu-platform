@@ -9,6 +9,15 @@ export async function POST(request) {
   console.log(firstName, lastName, email, password, userRole);
 
   await dbConnect();
+
+  // Check Duplicate email
+  const existingUser = await User.findOne({ email });
+  if(existingUser) {
+    return new NextResponse("User already exists", {
+      status: 400,
+    });
+  }
+
   const hashedPassword = await bcrypt.hash(password, 5);
 
   const newUser = {
