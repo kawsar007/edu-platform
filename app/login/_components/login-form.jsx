@@ -16,13 +16,40 @@ import { Label } from "@/components/ui/label";
 import { credientialLogin } from "@/app/actions";
 import { useToast } from "@/hooks/use-toast";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export function LoginForm() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [rememberPassword, setRememberPassword] = useState(false);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const router = useRouter();
   const { toast } = useToast();
+
+  useEffect(() => {
+    // Check localStorage for saved credentials
+    const savedEmail = localStorage.getItem("email");
+    const savedPassword = localStorage.getItem("password");
+    const savedTimestamp = localStorage.getItem("timestamp");
+
+    if (savedEmail && savedPassword && savedTimestamp) {
+      const currentTime = new Date().getTime();
+      const timeDifference = currentTime - parseInt(savedTimestamp, 10);
+
+      // Check if the saved credentials are within 24 hours
+      if (timeDifference < 24 * 60 * 60 * 1000) {
+        setEmail(savedEmail);
+        setPassword(savedPassword);
+        setRememberPassword(true);
+      } else {
+        // Clear expired credentials
+        localStorage.removeItem("email");
+        localStorage.removeItem("password");
+        localStorage.removeItem("timestamp");
+      }
+    }
+  }, []);
 
   async function onSubmit(event) {
     event.preventDefault();
@@ -30,19 +57,29 @@ export function LoginForm() {
 
     try {
       const formData = new FormData(event.currentTarget);
+      const email = formData.get("email");
+      const password = formData.get("password");
       const response = await credientialLogin(formData);
-
-      console.log("response", response);
-
       if (!!response.error) {
         console.error(response.error);
         setError(response.error);
       } else {
         toast({
           title: "Logged in successfully",
-          // description: "Redirecting to courses page",
           variant: "default",
         });
+
+        // Store in localStorage if rememberPassword is checked
+        if (rememberPassword) {
+          localStorage.setItem("email", email);
+          localStorage.setItem("password", password);
+          localStorage.setItem("timestamp", new Date().getTime().toString());
+        } else {
+          localStorage.removeItem("email");
+          localStorage.removeItem("password");
+          localStorage.removeItem("timestamp");
+        }
+
         router.push("/courses");
       }
     } catch (e) {
@@ -70,6 +107,8 @@ export function LoginForm() {
                 name='email'
                 type='email'
                 placeholder='m@example.com'
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
                 required
               />
             </div>
@@ -77,7 +116,24 @@ export function LoginForm() {
               <div className='flex items-center'>
                 <Label htmlFor='password'>Password</Label>
               </div>
-              <Input id='password' name='password' type='password' required />
+              <Input
+                id='password'
+                name='password'
+                type='password'
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+              />
+            </div>
+            <div className='flex items-center'>
+              <input
+                type='checkbox'
+                id='rememberPassword'
+                checked={rememberPassword}
+                onChange={() => setRememberPassword(!rememberPassword)}
+                className='mr-2'
+              />
+              <Label htmlFor='rememberPassword'>Remember Password</Label>
             </div>
             <Button type='submit' className='w-full' disabled={loading}>
               {loading ? "Loading..." : "Login"}
