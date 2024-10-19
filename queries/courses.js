@@ -55,7 +55,7 @@ export async function getCourseDetailsByInstructor(instructorId) {
       return enrollment;
     })
   )
-  const totalEnrollments = enrollments.reduce((item, currentValue) => {
+  const totalEnrollments = enrollments?.reduce((item, currentValue) => {
     return item.length + currentValue.length;
   })
 
