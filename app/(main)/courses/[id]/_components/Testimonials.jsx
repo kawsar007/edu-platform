@@ -10,7 +10,7 @@ import {
 import Image from "next/image";
 
 const Testimonials = ({ testimonials }) => {
-  console.log("testimonials", testimonials);
+  console.log("My testimonials", testimonials);
 
   return (
     <section className='pb-8 md:pb-12 lg:pb-24'>
@@ -33,7 +33,7 @@ const Testimonials = ({ testimonials }) => {
                     <div className='flex items-center gap-4'>
                       <Image
                         alt=''
-                        src={testimonial?.user?.profile_picture}
+                        src={testimonial?.user?.profilePicture}
                         width='56'
                         height='56'
                         className='size-14 rounded-full object-cover'
