@@ -3,14 +3,13 @@ import { CircleCheck } from "lucide-react";
 import Link from "next/link";
 
 import { auth } from "@/auth";
+import { sendEmails } from "@/lib/emails";
 import { stripe } from "@/lib/stripe";
 import { getCourseDetails } from "@/queries/courses";
 import { getUserByEmail } from "@/queries/users";
 import { redirect } from "next/navigation";
 
 const Success = async ({ searchParams: { session_id, courseId } }) => {
-  console.log(session_id, courseId);
-
   if (!session_id)
     throw new Error("Please provide a valid session id that starts with cs_");
 
@@ -23,23 +22,60 @@ const Success = async ({ searchParams: { session_id, courseId } }) => {
   const course = await getCourseDetails(courseId);
   const loggedInUser = await getUserByEmail(userSession?.user?.email);
 
+  
+
+  console.log("My Course", course);
+
   const checkoutSession = await stripe.checkout.sessions.retrieve(session_id, {
     expand: ["line_items", "payment_intent"],
   });
 
   const paymentIntent = checkoutSession.payment_intent;
   const paymentStatus = paymentIntent.status;
-  const productName = course?.title;
+ 
 
   // Customer Information
-  const customerName = `${loggedInUser?.firstName} ${loggedInUser?.lastname}`;
+  const customerName = `${loggedInUser?.firstName} ${loggedInUser?.lastName}`;
   const customerEmail = loggedInUser?.email;
+  const productName = course?.title;
 
   if (paymentStatus === "succeeded") {
+    const instructorName = `${course?.instructor?.firstName} ${course?.instructor?.lastName}`;
+    const instructorEmail = course?.instructor?.email;
+
+   console.log("Customer Email ---> ", customerEmail);
+    
+
     // Sent email to the instructor
+    const emailsToSend = [
+      {
+        to: instructorEmail,
+        subject: `New Enrollment for ${productName}`,
+        message: `Congratulations, ${instructorName}. A new student, ${customerName} has enrolled to your course ${productName} just now. Please check the instructor dashboard and give a high-five to your new student.`,
+      },
+      {
+        to: customerEmail,
+        subject: `Enrollment Success for ${productName}`,
+        message: `Hey ${customerName} You have successfully enrolled for the course ${productName}`,
+      },
+    ];
+
+    console.log("Emails To Send", emailsToSend);
+
+    const emailSentResponse = await sendEmails(emailsToSend);
+    
+
+    emailSentResponse.forEach((result) => {
+      if (result.status === 'fulfilled' && result.value.error) {
+        console.error('Error caught:', result.value.error);
+      }
+    });
+
+    console.log("Email Sent Response -> ", emailSentResponse);
+    
   }
 
-  console.log("checkoutSession", checkoutSession);
+  // console.log("checkoutSession", checkoutSession);
 
   return (
     <div className='h-full w-full flex-1 flex flex-col items-center justify-center'>
