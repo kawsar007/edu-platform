@@ -6,6 +6,7 @@ import { auth } from "@/auth";
 import { sendEmails } from "@/lib/emails";
 import { stripe } from "@/lib/stripe";
 import { getCourseDetails } from "@/queries/courses";
+import { enrollForCourse } from "@/queries/enrollments";
 import { getUserByEmail } from "@/queries/users";
 import { redirect } from "next/navigation";
 
@@ -22,17 +23,12 @@ const Success = async ({ searchParams: { session_id, courseId } }) => {
   const course = await getCourseDetails(courseId);
   const loggedInUser = await getUserByEmail(userSession?.user?.email);
 
-  
-
-  console.log("My Course", course);
-
   const checkoutSession = await stripe.checkout.sessions.retrieve(session_id, {
     expand: ["line_items", "payment_intent"],
   });
 
   const paymentIntent = checkoutSession.payment_intent;
   const paymentStatus = paymentIntent.status;
- 
 
   // Customer Information
   const customerName = `${loggedInUser?.firstName} ${loggedInUser?.lastName}`;
@@ -40,11 +36,17 @@ const Success = async ({ searchParams: { session_id, courseId } }) => {
   const productName = course?.title;
 
   if (paymentStatus === "succeeded") {
+    // Update DB (Enrollment collection)
+    const enrolled = await enrollForCourse(
+      course?.id,
+      loggedInUser?.id,
+      "stripe",
+    );
+
     const instructorName = `${course?.instructor?.firstName} ${course?.instructor?.lastName}`;
     const instructorEmail = course?.instructor?.email;
 
-   console.log("Customer Email ---> ", customerEmail);
-    
+    console.log("Customer Email ---> ", customerEmail);
 
     // Sent email to the instructor
     const emailsToSend = [
@@ -60,22 +62,17 @@ const Success = async ({ searchParams: { session_id, courseId } }) => {
       },
     ];
 
-    console.log("Emails To Send", emailsToSend);
-
     const emailSentResponse = await sendEmails(emailsToSend);
-    
+    // console.log(emailSentResponse);
 
-    emailSentResponse.forEach((result) => {
-      if (result.status === 'fulfilled' && result.value.error) {
-        console.error('Error caught:', result.value.error);
-      }
-    });
+    // For error purposes, sending emails without verifying a domain through DNS will not work, and multiple emails cannot be sent.
 
-    console.log("Email Sent Response -> ", emailSentResponse);
-    
+    // emailSentResponse.forEach((result) => {
+    //   if (result.status === 'fulfilled' && result.value.error) {
+    //     console.error('Error caught:', result.value.error);
+    //   }
+    // });
   }
-
-  // console.log("checkoutSession", checkoutSession);
 
   return (
     <div className='h-full w-full flex-1 flex flex-col items-center justify-center'>
