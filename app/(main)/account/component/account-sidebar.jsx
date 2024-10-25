@@ -27,7 +27,7 @@ const  AccountSidebar = async () => {
               name='profile-image'
               type='file'
               className='hidden'
-              onchange='loadFile(event)'
+              onChange='loadFile(event)'
             />
             <div>
               <div className='relative size-28 mx-auto'>

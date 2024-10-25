@@ -14,9 +14,9 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
 import { credientialLogin } from "@/app/actions";
-import { useToast } from "@/hooks/use-toast";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import { toast } from "sonner";
 
 export function LoginForm() {
   const [loading, setLoading] = useState(false);
@@ -25,7 +25,6 @@ export function LoginForm() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const router = useRouter();
-  const { toast } = useToast();
 
   useEffect(() => {
     // Check localStorage for saved credentials
@@ -64,10 +63,8 @@ export function LoginForm() {
         console.error(response.error);
         setError(response.error);
       } else {
-        toast({
-          title: "Logged in successfully",
-          variant: "default",
-        });
+        toast.success("Logged in successfully");
+
 
         // Store in localStorage if rememberPassword is checked
         if (rememberPassword) {

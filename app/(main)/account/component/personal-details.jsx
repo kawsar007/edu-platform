@@ -1,10 +1,13 @@
 "use client";
 
+import { updateUserInfo } from "@/app/actions/account";
+import Loading from "@/components/loading";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { useState } from "react";
+import { toast } from "sonner";
 
 const PersonalDetails = ({ userInfo }) => {
   const [infoState, setInfoState] = useState({
@@ -14,6 +17,7 @@ const PersonalDetails = ({ userInfo }) => {
     designation: userInfo?.designation || "",
     bio: userInfo?.bio || "",
   });
+  const [loading, setLoading] = useState(false);
 
   const handleChange = (event) => {
     const field = event.target.name;
@@ -25,9 +29,19 @@ const PersonalDetails = ({ userInfo }) => {
     });
   };
 
-  const handleUpdate = (event) => {
+  const handleUpdate = async (event) => {
     event.preventDefault();
-    console.log(infoState);
+    setLoading(true);
+
+    try {
+      await updateUserInfo(userInfo?.email, infoState);
+      toast.success("User details updated successfully.");
+    } catch (error) {
+      console.error(error);
+      toast.error(`Error: ${error.message}`);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -102,9 +116,13 @@ const PersonalDetails = ({ userInfo }) => {
           </div>
         </div>
         {/*end row*/}
-        <Button className='mt-5' asChild>
-          <input type='submit' name='send' value='Save Changes' />
-        </Button>
+        {loading ? (
+          <Loading title='Loading...' />
+        ) : (
+          <Button className='mt-5 cursor-pointer' asChild>
+            <input type='submit' name='send' value='Save Changes' />
+          </Button>
+        )}
       </form>
       {/*end form*/}
     </div>
