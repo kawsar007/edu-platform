@@ -18,6 +18,7 @@ const PersonalDetails = ({ userInfo }) => {
     bio: userInfo?.bio || "",
   });
   const [loading, setLoading] = useState(false);
+  const [isChanged, setIsChanged] = useState(false);
 
   const handleChange = (event) => {
     const field = event.target.name;
@@ -27,6 +28,7 @@ const PersonalDetails = ({ userInfo }) => {
       ...infoState,
       [field]: value,
     });
+    setIsChanged(true); 
   };
 
   const handleUpdate = async (event) => {
@@ -120,7 +122,7 @@ const PersonalDetails = ({ userInfo }) => {
           <Loading title='Loading...' />
         ) : (
           <Button className='mt-5 cursor-pointer' asChild>
-            <input type='submit' name='send' value='Save Changes' />
+            <input type='submit' name='send' value='Save Changes' disabled={!isChanged} />
           </Button>
         )}
       </form>
