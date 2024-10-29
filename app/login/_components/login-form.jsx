@@ -12,6 +12,7 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Eye, EyeOff } from "lucide-react";
 
 import { credientialLogin } from "@/app/actions";
 import { useRouter } from "next/navigation";
@@ -22,6 +23,7 @@ export function LoginForm() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [rememberPassword, setRememberPassword] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const router = useRouter();
@@ -64,7 +66,6 @@ export function LoginForm() {
         setError(response.error);
       } else {
         toast.success("Logged in successfully");
-
 
         // Store in localStorage if rememberPassword is checked
         if (rememberPassword) {
@@ -109,18 +110,24 @@ export function LoginForm() {
                 required
               />
             </div>
-            <div className='grid gap-2'>
+            <div className='grid gap-2 relative'>
               <div className='flex items-center'>
                 <Label htmlFor='password'>Password</Label>
               </div>
               <Input
                 id='password'
                 name='password'
-                type='password'
+                type={showPassword ? "text" : "password"}
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
               />
+              <button
+                type='button'
+                onClick={() => setShowPassword(!showPassword)}
+                className='absolute right-2 top-2/3 transform -translate-y-1/2'>
+                {showPassword ? <EyeOff /> : <Eye />}
+              </button>
             </div>
             <div className='flex items-center'>
               <input
