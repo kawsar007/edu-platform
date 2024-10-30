@@ -35,4 +35,26 @@ export async function changePassword(email, oldPassword, newPassword) {
   } catch (error) {
     throw new Error(error);
   }
+};
+
+export async function updateContactInfo(email, phone, url) {
+  console.log(url);
+  
+  const filter = { email: email };
+  const dataToUpdate = {
+    phone: phone,
+    social_media: {
+      facebook: url.facebook,
+      twitter: url.twitter,
+      linkedin: url.linkedin,
+      instagram: url.instagram
+    }
+  }
+  try {
+    await User.findOneAndUpdate(filter, dataToUpdate);
+  } catch (error) {
+    throw new Error(error)
+    console.log(error);
+    
+  }
 }

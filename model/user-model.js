@@ -29,7 +29,7 @@ const userSchema = new Schema({
         required: false,
         type: String,
     },
-    socialMedia: {
+    social_media: {
         required: false,
         type: Object,
     },
