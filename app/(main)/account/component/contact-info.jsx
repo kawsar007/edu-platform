@@ -4,20 +4,24 @@ import { updateContactInfo } from "@/app/actions/account";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Loader } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 
 const ContactInfo = ({ email, userInfo }) => {
   const [phone, setPhone] = useState(userInfo?.phone || "");
   const [url, setUrl] = useState({
-    facebook: "",
-    twitter: "",
-    linkedin: "",
-    instagram: "",
+    facebook: userInfo?.social_media?.facebook || "",
+    twitter: userInfo?.social_media?.twitter || "",
+    linkedin: userInfo?.social_media?.linkedin || "",
+    instagram: userInfo?.social_media?.instagram || "",
   });
+  const [loading, setLoading] = useState(false);
+  const [isChanged, setIsChanged] = useState(false);
 
   const handlePhoneChange = (e) => {
     setPhone(e.target.value);
+    setIsChanged(true);
   };
 
   const handleUrlChange = (e) => {
@@ -26,17 +30,21 @@ const ContactInfo = ({ email, userInfo }) => {
       ...prevUrl,
       [name]: value,
     }));
+    setIsChanged(true);
   };
 
   const handleSubmit = async (e) => {
-    e.preventDefault(); // Prevent default form submission
-
+    e.preventDefault();
+    setLoading(true);
     try {
-      const res = await updateContactInfo(email, phone, url);
-      console.log(res);
+      await updateContactInfo(email, phone, url);
+      toast.success("Contact Info updated successfully.");
+      setLoading(false);
     } catch (err) {
       console.error(err);
       toast.error(`Error: ${err.message}`);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -63,7 +71,7 @@ const ContactInfo = ({ email, userInfo }) => {
               id='facebook'
               type='url'
               placeholder='Facebook URL'
-              value={url.facebook} // Bind facebook state
+              value={url?.facebook} // Bind facebook state
               onChange={handleUrlChange} // Handle URL change
               className='mb-2'
             />
@@ -74,7 +82,7 @@ const ContactInfo = ({ email, userInfo }) => {
               id='twitter'
               type='url'
               placeholder='Twitter URL'
-              value={url.twitter}
+              value={url?.twitter}
               onChange={handleUrlChange}
               className='mb-2'
             />
@@ -85,7 +93,7 @@ const ContactInfo = ({ email, userInfo }) => {
               id='linkedin'
               type='url'
               placeholder='LinkedIn URL'
-              value={url.linkedin}
+              value={url?.linkedin}
               onChange={handleUrlChange}
               className='mb-2'
             />
@@ -96,14 +104,13 @@ const ContactInfo = ({ email, userInfo }) => {
               id='instagram'
               type='url'
               placeholder='Instagram URL'
-              value={url.instagram}
+              value={url?.instagram}
               onChange={handleUrlChange}
             />
           </div>
         </div>
-        {/*end grid*/}
-        <Button className='mt-5' type='submit'>
-          Add
+        <Button className='mt-5' type='submit' disabled={!isChanged}>
+          {loading ? <>Add <Loader className='animate-spin' /></>  : "Add"}
         </Button>
       </form>
     </div>

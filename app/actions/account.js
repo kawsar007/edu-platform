@@ -38,8 +38,6 @@ export async function changePassword(email, oldPassword, newPassword) {
 };
 
 export async function updateContactInfo(email, phone, url) {
-  console.log(url);
-  
   const filter = { email: email };
   const dataToUpdate = {
     phone: phone,
@@ -55,6 +53,5 @@ export async function updateContactInfo(email, phone, url) {
   } catch (error) {
     throw new Error(error)
     console.log(error);
-    
   }
 }
