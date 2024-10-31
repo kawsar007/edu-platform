@@ -9,6 +9,7 @@ export async function updateUserInfo(email, updateData) {
   try {
     const filter = { email: email };
     await User.findOneAndUpdate(filter, updateData);
+    revalidatePath('/account')
   } catch (error) {
     throw new Error(error)
   }
@@ -47,6 +48,19 @@ export async function updateContactInfo(email, phone, url) {
       linkedin: url.linkedin,
       instagram: url.instagram
     }
+  }
+  try {
+    await User.findOneAndUpdate(filter, dataToUpdate);
+  } catch (error) {
+    throw new Error(error)
+    console.log(error);
+  }
+}
+
+export async function updateProfilePicture(email, file) {
+  const filter = { email: email };
+  const dataToUpdate = {
+    profilePicture: file
   }
   try {
     await User.findOneAndUpdate(filter, dataToUpdate);
