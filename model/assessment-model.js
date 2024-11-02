@@ -8,7 +8,7 @@ const assessmentSchema = new Schema({
   otherMarks: {
     required: true,
     type: Number,
-  }
+  },
 });
 
-export const Assessment = mongoose.models.Assessment ?? mongoose.model("Assessments", assessmentSchema);
+export const Assessment = mongoose.models.Assessment ?? mongoose.model("Assessment", assessmentSchema);

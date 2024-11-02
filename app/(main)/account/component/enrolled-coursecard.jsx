@@ -1,10 +1,10 @@
 import { Badge } from "@/components/ui/badge";
 import { getCategoryDetails } from "@/queries/categories";
+import { getAReport } from "@/queries/reports";
 import { BookOpen } from "lucide-react";
 import Image from "next/image";
 
 const EnrolledCourseCard = async ({ enrollment }) => {
-  
   if (!enrollment || !enrollment.course || !enrollment.course.category) {
     console.error("Enrollment or course category is not defined");
     return null; // or handle the error as needed
@@ -13,6 +13,14 @@ const EnrolledCourseCard = async ({ enrollment }) => {
   const courseCategory = await getCategoryDetails(
     enrollment.course.category._id,
   );
+
+  const filter = {
+    course: enrollment?.course?._id,
+    student: enrollment?.student?._id,
+  };
+  const report = await getAReport(filter);
+
+  console.log("Report --->", filter);
 
   return (
     <div className='group hover:shadow-sm transition overflow-hidden border rounded-lg p-3 h-full'>
