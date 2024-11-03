@@ -1,4 +1,3 @@
-
 import { Badge } from "@/components/ui/badge";
 import { getCategoryDetails } from "@/queries/categories";
 import { getAReport } from "@/queries/reports";
@@ -21,19 +20,32 @@ const EnrolledCourseCard = async ({ enrollment }) => {
   };
   const report = await getAReport(filter);
 
-  
-
   // Total Completed Modules
   const totalCompletedModules = report?.totalCompletedModeules?.length;
 
   // Get all Quizzes and Assignments
   const quizzes = report?.quizAssessment?.assessments;
-  const totalQuizzes = quizzes?.length
+  const totalQuizzes = quizzes?.length;
 
   // Find attempted qiuzzes
-  const quizzesTaken = quizzes.filter(q => q.attempted);
+  const quizzesTaken = quizzes.filter((q) => q.attempted);
 
-  console.log("RReport ---> ", report);
+  // Find how many quizzes answered correct
+  const totalCorrect = quizzesTaken
+    .map((quiz) => {
+      const item = quiz.options;
+      return item.filter((el) => {
+        return el.isCorrect === true && el.isSelected === true;
+      });
+    })
+    .filter((elem) => elem.length > 0)
+    .flat();
+
+  const marksFromQuizzes = totalCorrect?.length * 5;
+  const otherMarks = report?.quizAssessment?.otherMarks;
+  const totalMarks = marksFromQuizzes + otherMarks;
+
+  console.log("Total Correct ---> ", totalCorrect);
 
   return (
     <div className='group hover:shadow-sm transition overflow-hidden border rounded-lg p-3 h-full'>
@@ -64,7 +76,8 @@ const EnrolledCourseCard = async ({ enrollment }) => {
               Total Modules: 10
             </p>
             <p className='text-md md:text-sm font-medium text-slate-700'>
-              Completed Modules <Badge variant='success'>{totalCompletedModules}</Badge>
+              Completed Modules{" "}
+              <Badge variant='success'>{totalCompletedModules}</Badge>
             </p>
           </div>
           <div className='flex items-center justify-between mt-2'>
@@ -81,22 +94,27 @@ const EnrolledCourseCard = async ({ enrollment }) => {
               Mark from Quizzes
             </p>
 
-            <p className='text-md md:text-sm font-medium text-slate-700'>50</p>
+            <p className='text-md md:text-sm font-medium text-slate-700'>
+              {marksFromQuizzes}
+            </p>
           </div>
           <div className='flex items-center justify-between mt-2'>
             <p className='text-md md:text-sm font-medium text-slate-700'>
               Others
             </p>
 
-            <p className='text-md md:text-sm font-medium text-slate-700'>50</p>
+            <p className='text-md md:text-sm font-medium text-slate-700'>
+              {otherMarks}
+            </p>
           </div>
         </div>
         <div className='flex items-center justify-between mb-4'>
           <p className='text-md md:text-sm font-medium text-slate-700'>
             Total Marks
           </p>
-
-          <p className='text-md md:text-sm font-medium text-slate-700'>100</p>
+          <p className='text-md md:text-sm font-medium text-slate-700'>
+            {totalMarks}
+          </p>
         </div>
       </div>
     </div>
