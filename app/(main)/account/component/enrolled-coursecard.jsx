@@ -1,3 +1,4 @@
+
 import { Badge } from "@/components/ui/badge";
 import { getCategoryDetails } from "@/queries/categories";
 import { getAReport } from "@/queries/reports";
@@ -20,7 +21,19 @@ const EnrolledCourseCard = async ({ enrollment }) => {
   };
   const report = await getAReport(filter);
 
-  console.log("Report --->", filter);
+  
+
+  // Total Completed Modules
+  const totalCompletedModules = report?.totalCompletedModeules?.length;
+
+  // Get all Quizzes and Assignments
+  const quizzes = report?.quizAssessment?.assessments;
+  const totalQuizzes = quizzes?.length
+
+  // Find attempted qiuzzes
+  const quizzesTaken = quizzes.filter(q => q.attempted);
+
+  console.log("RReport ---> ", report);
 
   return (
     <div className='group hover:shadow-sm transition overflow-hidden border rounded-lg p-3 h-full'>
@@ -51,16 +64,16 @@ const EnrolledCourseCard = async ({ enrollment }) => {
               Total Modules: 10
             </p>
             <p className='text-md md:text-sm font-medium text-slate-700'>
-              Completed Modules <Badge variant='success'>05</Badge>
+              Completed Modules <Badge variant='success'>{totalCompletedModules}</Badge>
             </p>
           </div>
           <div className='flex items-center justify-between mt-2'>
             <p className='text-md md:text-sm font-medium text-slate-700'>
-              Total Quizzes: 10
+              Total Quizzes: {totalQuizzes}
             </p>
 
             <p className='text-md md:text-sm font-medium text-slate-700'>
-              Quiz taken <Badge variant='success'>10</Badge>
+              Quiz taken <Badge variant='success'>{quizzesTaken.length}</Badge>
             </p>
           </div>
           <div className='flex items-center justify-between mt-2'>
