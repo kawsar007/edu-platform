@@ -10,8 +10,6 @@ import {
 import Image from "next/image";
 
 const Testimonials = ({ testimonials }) => {
-  console.log("My testimonials", testimonials);
-
   return (
     <section className='pb-8 md:pb-12 lg:pb-24'>
       <div className='container'>

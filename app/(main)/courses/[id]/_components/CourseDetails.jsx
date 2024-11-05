@@ -6,8 +6,6 @@ import CourseInstructor from "./CourseInstructor";
 import CourseOverview from "./CourseOverview";
 
 const CourseDetails = ({ course }) => {
-  console.log("course", course);
-
   const lastModifiedDate = formatMyDate(course?.modifiedOn);
 
   return (

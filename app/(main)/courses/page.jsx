@@ -8,9 +8,7 @@ import { getCourseList } from "@/queries/courses";
 import CourseCard from "./_components/CourseCard";
 
 const CoursesPage = async () => {
-  const courses = await getCourseList();
-  console.log("Courses", courses);
-  
+  const courses = await getCourseList();  
 
   return (
     <section

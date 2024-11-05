@@ -69,8 +69,6 @@ export async function getCourseDetailsByInstructor(instructorId) {
   const totalTestimonials = testimonials.flat();
   const avgRating = (totalTestimonials.reduce((acc, item) => acc + item.rating, 0) / totalTestimonials.length).toFixed(2);
 
-  console.log("Average rating", avgRating);
-  
 
   return {
     "courses": courses.length,

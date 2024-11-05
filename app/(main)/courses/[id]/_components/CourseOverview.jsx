@@ -1,7 +1,6 @@
 import { CheckCheck } from "lucide-react";
 
 const CourseOverview = ({ course }) => {
-  console.log("CourseOverview", course);
   
   return (
     <>
