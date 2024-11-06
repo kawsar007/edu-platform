@@ -2,14 +2,17 @@
 import { SectionTitle } from "@/components/section-title";
 import { Button } from "@/components/ui/button";
 import { formatPrice } from "@/lib/formatPrice";
-import { getCourseDetails, getCourseDetailsByInstructor } from "@/queries/courses";
+import {
+  getCourseDetails,
+  getCourseDetailsByInstructor,
+} from "@/queries/courses";
 import {
   ArrowRight,
   BookOpen,
   MessageSquare,
   Presentation,
   Star,
-  UsersRound
+  UsersRound,
 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -41,9 +44,6 @@ const InstructorProfilePage = async ({ params }) => {
     course?.instructor?._id?.toString(),
   );
 
-  console.log("--courseId--", course);
-  
-
   return (
     <section id='categories' className='space-y-6  py-6  lg:py-12'>
       <div className='container grid grid-cols-12 lg:gap-x-8 gap-y-8'>
@@ -62,11 +62,9 @@ const InstructorProfilePage = async ({ params }) => {
               </div>
 
               <div>
-                <h4 className='text-xl lg:text-2xl text-center'>
-                {fullName}
-                </h4>
+                <h4 className='text-xl lg:text-2xl text-center'>{fullName}</h4>
                 <div className='text-gray-600 font-medium mb-6 text-sm text-center'>
-                {course?.instructor?.designation}
+                  {course?.instructor?.designation}
                 </div>
                 <ul className=' items-center gap-3 flex-wrap text-sm text-gray-600 font-medium grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2 md:grid-cols-4'>
                   <li className='flex items-center space-x-3'>
@@ -83,7 +81,9 @@ const InstructorProfilePage = async ({ params }) => {
                   </li>
                   <li className='flex items-center space-x-3'>
                     <Star className='text-gray-600 w-4' />
-                    <div>{courseDetailsByInstructor?.ratings} Average Rating</div>
+                    <div>
+                      {courseDetailsByInstructor?.ratings} Average Rating
+                    </div>
                   </li>
                 </ul>
               </div>
