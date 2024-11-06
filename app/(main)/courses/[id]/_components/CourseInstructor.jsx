@@ -7,7 +7,10 @@ import Image from "next/image";
 import Link from "next/link";
 
 const CourseInstructor = async ({ course }) => {
-  const instructor = course?.instructor;
+  const instructor = course?.instructor;  
+
+  console.log("My Course Id", course);
+  
 
   const fullName = `${instructor?.firstName}  ${instructor?.lastName}`;
   const courseDetailsByInstructor = await getCourseDetailsByInstructor(
@@ -54,7 +57,7 @@ const CourseInstructor = async ({ course }) => {
 
               <li className='flex space-x-3'>
                 <Link
-                  href='/instructor-profile'
+                   href={`/instructor-profile/${course?.id.toString()}`}
                   className={cn(
                     buttonVariants({ variant: "outline", size: "lg" }),
                   )}>
