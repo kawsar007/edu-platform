@@ -55,9 +55,27 @@ export async function getCourseDetailsByInstructor(instructorId) {
       return enrollment;
     })
   )
+
+  // Object.groupBy method is not available in your current JavaScript environment.
+  // const groupByCourses = Object.groupBy(enrollments.flat(), ({ course }) => course);
+
+  // Custom function to group items by a specified key
+  const groupBy = (array, key) => {
+    return array.reduce((result, currentValue) => {
+      (result[currentValue[key]] = result[currentValue[key]] || []).push(currentValue);
+      return result;
+    }, {});
+  };
+
+  const groupByCourses = groupBy(enrollments.flat(), 'course');
+
+  const totalRevenue = courses.reduce((acc, course) => {
+    return (acc + groupByCourses[course._id].length * course.price)
+  }, 0);
+
   const totalEnrollments = enrollments.reduce(function (acc, obj) {
     return acc + obj.length;
-}, 0)
+  }, 0)
 
   const testimonials = await Promise.all(
     courses.map(async (course) => {
@@ -75,5 +93,6 @@ export async function getCourseDetailsByInstructor(instructorId) {
     "enrollments": totalEnrollments,
     "reviews": totalTestimonials.length,
     "ratings": avgRating,
+    "revenue": totalRevenue
   }
 }
