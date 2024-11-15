@@ -23,11 +23,23 @@ export function MainNav({ items, children }) {
   const { data: session } = useSession();
   const [showMobileMenu, setShowMobileMenu] = useState(false);
   const [loginSession, setLoginSession] = useState(null);
+  const [loggedInUser, setLoggedInUser] = useState(null);
 
-  console.log(loginSession);
+  console.log(loggedInUser);
 
   useEffect(() => {
     setLoginSession(session);
+    async function getchMe() {
+      try {
+        const response = await fetch("/api/me");
+        const data = await response.json();
+        setLoggedInUser(data);
+        console.log("Fetch Me", data);
+      } catch (error) {
+        console.log(error);
+      }
+    }
+    getchMe();
   }, [session]);
 
   return (
@@ -85,10 +97,7 @@ export function MainNav({ items, children }) {
           <DropdownMenuTrigger asChild>
             <div className='cursor-pointer'>
               <Avatar>
-                <AvatarImage
-                  src='https://github.com/shadcn.png'
-                  alt='@shadcn'
-                />
+                <AvatarImage src={loggedInUser?.profilePicture} alt='@shadcn' />
                 <AvatarFallback>CN</AvatarFallback>
               </Avatar>
             </div>
@@ -97,6 +106,12 @@ export function MainNav({ items, children }) {
             <DropdownMenuItem className='cursor-pointer' asChild>
               <Link href='/account'>Profile</Link>
             </DropdownMenuItem>
+            {loggedInUser?.role === "instructor" && (
+              <DropdownMenuItem className='cursor-pointer' asChild>
+                <Link href='/dashboard'>Dashboard</Link>
+              </DropdownMenuItem>
+            )}
+
             <DropdownMenuItem className='cursor-pointer' asChild>
               <Link href='/account/enrolled-courses'>My Courses</Link>
             </DropdownMenuItem>
