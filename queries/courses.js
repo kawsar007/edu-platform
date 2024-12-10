@@ -8,7 +8,7 @@ import { getEnrollmentsForCourse } from "./enrollments";
 import { getTestimonialsForCourse } from "./testimonials";
 
 export async function getCourseList() {
-  const courses = await Course.find({}).select(["title", "thumbnail", "modules", "price", "category", "instructor"]).populate({
+  const courses = await Course.find({ active: true }).select(["title", "thumbnail", "modules", "price", "category", "instructor"]).populate({
     path: "category",
     model: Category
   }).populate({
@@ -70,7 +70,7 @@ export async function getCourseDetailsByInstructor(instructorId, expand) {
   const groupByCourses = groupBy(enrollments.flat(), 'course');
 
   const totalRevenue = courses.reduce((acc, course) => {
-    return (acc + groupByCourses[course._id].length * course.price)
+    return (acc + groupByCourses[course._id]?.length * course.price)
   }, 0);
 
   const totalEnrollments = enrollments.reduce(function (acc, obj) {

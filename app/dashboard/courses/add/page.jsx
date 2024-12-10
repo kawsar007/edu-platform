@@ -1,6 +1,7 @@
 "use client";
 import * as z from "zod";
 // import axios from "axios";
+import { createCourse } from "@/app/actions/course";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -42,7 +43,9 @@ const AddCourse = () => {
 
   const onSubmit = async (values) => {
     try {
-      router.push(`/dashboard/courses/${1}`); // Now static course id
+      const course = await createCourse(values);
+
+      router.push(`/dashboard/courses/${course?._id}`); // Now static course id
       toast.success("Course created");
     } catch (error) {
       toast.error("Something went wrong");
@@ -50,17 +53,16 @@ const AddCourse = () => {
     console.log(values);
   };
   return (
-    <div className="max-w-5xl mx-auto flex md:items-center md:justify-center h-full p-6">
-      <div className="max-w-full w-[536px]">
+    <div className='max-w-5xl mx-auto flex md:items-center md:justify-center h-full p-6'>
+      <div className='max-w-full w-[536px]'>
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit(onSubmit)}
-            className="space-y-8 mt-8"
-          >
+            className='space-y-8 mt-8'>
             {/* title */}
             <FormField
               control={form.control}
-              name="title"
+              name='title'
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Course Title</FormLabel>
@@ -78,14 +80,14 @@ const AddCourse = () => {
             {/* description */}
             <FormField
               control={form.control}
-              name="description"
+              name='description'
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Course Description</FormLabel>
                   <FormControl>
                     <Textarea
-                      placeholder="Course overview"
-                      className="resize-none"
+                      placeholder='Course overview'
+                      className='resize-none'
                       {...field}
                     />
                   </FormControl>
@@ -96,13 +98,13 @@ const AddCourse = () => {
                 </FormItem>
               )}
             />
-            <div className="flex items-center gap-x-2">
-              <Link href="/dashboard/courses">
-                <Button variant="outline" type="button">
+            <div className='flex items-center gap-x-2'>
+              <Link href='/dashboard/courses'>
+                <Button variant='outline' type='button'>
                   Cancel
                 </Button>
               </Link>
-              <Button type="submit" disabled={!isValid || isSubmitting}>
+              <Button type='submit' disabled={!isValid || isSubmitting}>
                 Continue
               </Button>
             </div>
