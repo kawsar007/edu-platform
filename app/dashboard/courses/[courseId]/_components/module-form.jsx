@@ -4,6 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 
+import { createModule, reOrderModules } from "@/app/actions/module";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -13,6 +14,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { getSlug } from "@/lib/convertData";
 import { cn } from "@/lib/utils";
 import { Loader2, PlusCircle } from "lucide-react";
 import { useRouter } from "next/navigation";
@@ -23,19 +25,19 @@ import { ModuleList } from "./module-list";
 const formSchema = z.object({
   title: z.string().min(1),
 });
-const initialModules = [
-  {
-    id: "1",
-    title: "Module 1",
-    isPublished: true,
-  },
-  {
-    id: "2",
-    title: "Module 2",
-  },
-];
+// const initialModules = [
+//   {
+//     id: "1",
+//     title: "Module 1",
+//     isPublished: true,
+//   },
+//   {
+//     id: "2",
+//     title: "Module 2",
+//   },
+// ];
 export const ModulesForm = ({ initialData, courseId }) => {
-  const [modules, setModules] = useState(initialModules);
+  const [modules, setModules] = useState(initialData);
   const router = useRouter();
   const [isCreating, setIsCreating] = useState(false);
   const [isUpdating, setIsUpdating] = useState(false);
@@ -53,10 +55,18 @@ export const ModulesForm = ({ initialData, courseId }) => {
 
   const onSubmit = async (values) => {
     try {
+      const formData = new FormData();
+      formData.append("title", values?.title);
+      formData.append("slug", getSlug(values?.title));
+      formData.append("courseId", courseId);
+      formData.append("order", modules?.length);
+
+      const newModule = await createModule(formData);
+
       setModules((modules) => [
         ...modules,
         {
-          id: Date.now().toString(),
+          id: newModule?._id.toString(),
           title: values.title,
         },
       ]);
@@ -71,6 +81,7 @@ export const ModulesForm = ({ initialData, courseId }) => {
   const onReorder = async (updateData) => {
     console.log({ updateData });
     try {
+      reOrderModules(updateData);
       setIsUpdating(true);
 
       toast.success("Chapters reordered");
@@ -87,20 +98,20 @@ export const ModulesForm = ({ initialData, courseId }) => {
   };
 
   return (
-    <div className="relative mt-6 border bg-slate-100 rounded-md p-4">
+    <div className='relative mt-6 border bg-slate-100 rounded-md p-4'>
       {isUpdating && (
-        <div className="absolute h-full w-full bg-gray-500/20 top-0 right-0 rounded-md flex items-center justify-center">
-          <Loader2 className="animate-spin h-6 w-6 text-sky-700" />
+        <div className='absolute h-full w-full bg-gray-500/20 top-0 right-0 rounded-md flex items-center justify-center'>
+          <Loader2 className='animate-spin h-6 w-6 text-sky-700' />
         </div>
       )}
-      <div className="font-medium flex items-center justify-between">
+      <div className='font-medium flex items-center justify-between'>
         Course Modules
-        <Button variant="ghost" onClick={toggleCreating}>
+        <Button variant='ghost' onClick={toggleCreating}>
           {isCreating ? (
             <>Cancel</>
           ) : (
             <>
-              <PlusCircle className="h-4 w-4 mr-2" />
+              <PlusCircle className='h-4 w-4 mr-2' />
               Add a module
             </>
           )}
@@ -111,11 +122,10 @@ export const ModulesForm = ({ initialData, courseId }) => {
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit(onSubmit)}
-            className="space-y-4 mt-4"
-          >
+            className='space-y-4 mt-4'>
             <FormField
               control={form.control}
-              name="title"
+              name='title'
               render={({ field }) => (
                 <FormItem>
                   <FormControl>
@@ -129,7 +139,7 @@ export const ModulesForm = ({ initialData, courseId }) => {
                 </FormItem>
               )}
             />
-            <Button disabled={!isValid || isSubmitting} type="submit">
+            <Button disabled={!isValid || isSubmitting} type='submit'>
               Create
             </Button>
           </form>
@@ -139,9 +149,8 @@ export const ModulesForm = ({ initialData, courseId }) => {
         <div
           className={cn(
             "text-sm mt-2",
-            !modules?.length && "text-slate-500 italic"
-          )}
-        >
+            !modules?.length && "text-slate-500 italic",
+          )}>
           {!modules?.length && "No module"}
           <ModuleList
             onEdit={onEdit}
@@ -151,7 +160,7 @@ export const ModulesForm = ({ initialData, courseId }) => {
         </div>
       )}
       {!isCreating && (
-        <p className="text-xs text-muted-foreground mt-4">
+        <p className='text-xs text-muted-foreground mt-4'>
           Drag & Drop to reorder the modules
         </p>
       )}

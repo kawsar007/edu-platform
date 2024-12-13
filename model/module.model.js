@@ -31,4 +31,4 @@ const moduleSchema = new Schema({
   }
 });
 
-export const Module = mongoose.models.Module ?? mongoose.model("Module", moduleSchema);
+export const Module = mongoose.models?.Module ?? mongoose.model("Module", moduleSchema);
