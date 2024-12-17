@@ -24,7 +24,7 @@ import { LessonModal } from "./lesson-modal";
 const formSchema = z.object({
   title: z.string().min(1),
 });
-const initialModules = [
+const initialLessons = [
   {
     id: "1",
     title: "Module 1",
@@ -35,9 +35,9 @@ const initialModules = [
     title: "Module 2",
   },
 ];
-export const LessonForm = ({ initialData, courseId }) => {
+export const LessonForm = ({ initialData, moduleId }) => {
   const [isEditing, setIsEditing] = useState(false);
-  const [modules, setModules] = useState(initialModules);
+  const [lessons, setLessons] = useState(initialLessons);
   const router = useRouter();
   const [isCreating, setIsCreating] = useState(false);
   const [isUpdating, setIsUpdating] = useState(false);
@@ -56,14 +56,14 @@ export const LessonForm = ({ initialData, courseId }) => {
 
   const onSubmit = async (values) => {
     try {
-      setModules((modules) => [
-        ...modules,
+      setLessons((lessons) => [
+        ...lessons,
         {
           id: Date.now().toString(),
           title: values.title,
         },
       ]);
-      toast.success("Module created");
+      toast.success("Lesson created");
       toggleCreating();
       router.refresh();
     } catch (error) {
@@ -142,20 +142,20 @@ export const LessonForm = ({ initialData, courseId }) => {
         <div
           className={cn(
             "text-sm mt-2",
-            !modules?.length && "text-slate-500 italic"
+            !lessons?.length && "text-slate-500 italic"
           )}
         >
-          {!modules?.length && "No module"}
+          {!lessons?.length && "No Lesson"}
           <LessonList
             onEdit={onEdit}
             onReorder={onReorder}
-            items={modules || []}
+            items={lessons || []}
           />
         </div>
       )}
       {!isCreating && (
         <p className="text-xs text-muted-foreground mt-4">
-          Drag & Drop to reorder the modules
+          Drag & Drop to reorder the lessons
         </p>
       )}
       <LessonModal open={isEditing} setOpen={setIsEditing} />

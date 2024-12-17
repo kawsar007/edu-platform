@@ -1,5 +1,6 @@
 import AlertBanner from "@/components/alert-banner";
 import { IconBadge } from "@/components/icon-badge";
+import { replaceMongoIdInArray } from "@/lib/convertData";
 import { getModule } from "@/queries/modules";
 import { ArrowLeft, BookOpenCheck, LayoutDashboard } from "lucide-react";
 import Link from "next/link";
@@ -9,7 +10,13 @@ import { ModuleTitleForm } from "./_components/module-title-form";
 
 const Module = async ({ params: { courseId, moduleId } }) => {
   const singleModule = await getModule(moduleId);
-  console.log("singleModule", singleModule);
+
+  const lessons = replaceMongoIdInArray(singleModule?.lessonIds).sort(
+    (a, b) => a.order - b.order,
+  );
+
+  console.log("Lessons", lessons);
+  
 
   return (
     <>
@@ -50,7 +57,7 @@ const Module = async ({ params: { courseId, moduleId } }) => {
                 <IconBadge icon={BookOpenCheck} />
                 <h2 className='text-xl'>Module Lessons</h2>
               </div>
-              <LessonForm />
+              <LessonForm initialData={lessons} moduleId={moduleId} />
             </div>
           </div>
           <div>
