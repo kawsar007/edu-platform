@@ -25,17 +25,7 @@ import { ModuleList } from "./module-list";
 const formSchema = z.object({
   title: z.string().min(1),
 });
-// const initialModules = [
-//   {
-//     id: "1",
-//     title: "Module 1",
-//     isPublished: true,
-//   },
-//   {
-//     id: "2",
-//     title: "Module 2",
-//   },
-// ];
+
 export const ModulesForm = ({ initialData, courseId }) => {
   const [modules, setModules] = useState(initialData);
   const router = useRouter();
@@ -94,7 +84,7 @@ export const ModulesForm = ({ initialData, courseId }) => {
   };
 
   const onEdit = (id) => {
-    router.push(`/dashboard/courses/1/modules/${1}`);
+    router.push(`/dashboard/courses/${courseId}/modules/${id}`);
   };
 
   return (
