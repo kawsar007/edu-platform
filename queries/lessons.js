@@ -10,7 +10,7 @@ export async function getLesson(lessonId) {
 export async function create(lessonData) {
   try {
     const lesson = await Lesson.create(lessonData);
-    return lesson?._id.toString();
+    return JSON.parse(JSON.stringify(lesson));
   } catch (err) {
     throw new Error(err)
   }

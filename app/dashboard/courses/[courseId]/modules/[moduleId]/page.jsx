@@ -15,9 +15,6 @@ const Module = async ({ params: { courseId, moduleId } }) => {
     (a, b) => a.order - b.order,
   );
 
-  console.log("Lessons", lessons);
-  
-
   return (
     <>
       <AlertBanner

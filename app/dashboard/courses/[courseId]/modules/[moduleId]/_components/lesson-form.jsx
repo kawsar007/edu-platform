@@ -4,6 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 
+import { createLessons, reOrderLesson } from "@/app/actions/lessons";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -13,6 +14,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { getSlug } from "@/lib/convertData";
 import { cn } from "@/lib/utils";
 import { Loader2, PlusCircle } from "lucide-react";
 import { useRouter } from "next/navigation";
@@ -37,7 +39,7 @@ const initialLessons = [
 ];
 export const LessonForm = ({ initialData, moduleId }) => {
   const [isEditing, setIsEditing] = useState(false);
-  const [lessons, setLessons] = useState(initialLessons);
+  const [lessons, setLessons] = useState(initialData);
   const router = useRouter();
   const [isCreating, setIsCreating] = useState(false);
   const [isUpdating, setIsUpdating] = useState(false);
@@ -56,10 +58,19 @@ export const LessonForm = ({ initialData, moduleId }) => {
 
   const onSubmit = async (values) => {
     try {
+      const formData = new FormData();
+
+      formData.append("title", values.title);
+      formData.append("slug", getSlug(values.title));
+      formData.append("moduleId", moduleId);
+      formData.append("order", lessons.length);
+
+      const lesson = await createLessons(formData)
+
       setLessons((lessons) => [
         ...lessons,
         {
-          id: Date.now().toString(),
+          id: lesson?._id.toString(),
           title: values.title,
         },
       ]);
@@ -75,7 +86,7 @@ export const LessonForm = ({ initialData, moduleId }) => {
     console.log({ updateData });
     try {
       setIsUpdating(true);
-
+      await reOrderLesson(updateData);
       toast.success("Lesson reordered");
       router.refresh();
     } catch {
@@ -90,20 +101,20 @@ export const LessonForm = ({ initialData, moduleId }) => {
   };
 
   return (
-    <div className="relative mt-6 border bg-slate-100 rounded-md p-4">
+    <div className='relative mt-6 border bg-slate-100 rounded-md p-4'>
       {isUpdating && (
-        <div className="absolute h-full w-full bg-gray-500/20 top-0 right-0 rounded-md flex items-center justify-center">
-          <Loader2 className="animate-spin h-6 w-6 text-sky-700" />
+        <div className='absolute h-full w-full bg-gray-500/20 top-0 right-0 rounded-md flex items-center justify-center'>
+          <Loader2 className='animate-spin h-6 w-6 text-sky-700' />
         </div>
       )}
-      <div className="font-medium flex items-center justify-between">
+      <div className='font-medium flex items-center justify-between'>
         Module Lessions
-        <Button variant="ghost" onClick={toggleCreating}>
+        <Button variant='ghost' onClick={toggleCreating}>
           {isCreating ? (
             <>Cancel</>
           ) : (
             <>
-              <PlusCircle className="h-4 w-4 mr-2" />
+              <PlusCircle className='h-4 w-4 mr-2' />
               Add a chapter
             </>
           )}
@@ -114,11 +125,10 @@ export const LessonForm = ({ initialData, moduleId }) => {
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit(onSubmit)}
-            className="space-y-4 mt-4"
-          >
+            className='space-y-4 mt-4'>
             <FormField
               control={form.control}
-              name="title"
+              name='title'
               render={({ field }) => (
                 <FormItem>
                   <FormControl>
@@ -132,7 +142,7 @@ export const LessonForm = ({ initialData, moduleId }) => {
                 </FormItem>
               )}
             />
-            <Button disabled={!isValid || isSubmitting} type="submit">
+            <Button disabled={!isValid || isSubmitting} type='submit'>
               Create
             </Button>
           </form>
@@ -142,9 +152,8 @@ export const LessonForm = ({ initialData, moduleId }) => {
         <div
           className={cn(
             "text-sm mt-2",
-            !lessons?.length && "text-slate-500 italic"
-          )}
-        >
+            !lessons?.length && "text-slate-500 italic",
+          )}>
           {!lessons?.length && "No Lesson"}
           <LessonList
             onEdit={onEdit}
@@ -154,7 +163,7 @@ export const LessonForm = ({ initialData, moduleId }) => {
         </div>
       )}
       {!isCreating && (
-        <p className="text-xs text-muted-foreground mt-4">
+        <p className='text-xs text-muted-foreground mt-4'>
           Drag & Drop to reorder the lessons
         </p>
       )}
