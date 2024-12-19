@@ -4,6 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 
+import { updateLesson } from "@/app/actions/lessons";
 import { Editor } from "@/components/editor";
 import { Preview } from "@/components/preview";
 import { Button } from "@/components/ui/button";
@@ -27,7 +28,7 @@ const formSchema = z.object({
 export const LessonDescriptionForm = ({ initialData, courseId, lessonId }) => {
   const router = useRouter();
   const [isEditing, setIsEditing] = useState(false);
-
+  const [description, setDescription] = useState(initialData?.description);
   const toggleEdit = () => setIsEditing((current) => !current);
 
   const form = useForm({
@@ -41,6 +42,8 @@ export const LessonDescriptionForm = ({ initialData, courseId, lessonId }) => {
 
   const onSubmit = async (values) => {
     try {
+      const lesson = await updateLesson(lessonId, values);
+      setDescription(values?.description);
       toast.success("Lesson updated");
       toggleEdit();
       router.refresh();
@@ -50,15 +53,15 @@ export const LessonDescriptionForm = ({ initialData, courseId, lessonId }) => {
   };
 
   return (
-    <div className="mt-6 border bg-slate-100 rounded-md p-4">
-      <div className="font-medium flex items-center justify-between">
+    <div className='mt-6 border bg-slate-100 rounded-md p-4'>
+      <div className='font-medium flex items-center justify-between'>
         Chapter Description
-        <Button variant="ghost" onClick={toggleEdit}>
+        <Button variant='ghost' onClick={toggleEdit}>
           {isEditing ? (
             <>Cancel</>
           ) : (
             <>
-              <Pencil className="h-4 w-4 mr-2" />
+              <Pencil className='h-4 w-4 mr-2' />
               Edit Description
             </>
           )}
@@ -68,24 +71,20 @@ export const LessonDescriptionForm = ({ initialData, courseId, lessonId }) => {
         <div
           className={cn(
             "text-sm mt-2",
-            !initialData.description && "text-slate-500 italic"
-          )}
-        >
-          {!initialData.description && "No description"}
-          {initialData.description && (
-            <Preview value={initialData.description} />
-          )}
+            !description && "text-slate-500 italic",
+          )}>
+          {!description && "No description"}
+          {description && <Preview value={description} />}
         </div>
       )}
       {isEditing && (
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit(onSubmit)}
-            className="space-y-4 mt-4"
-          >
+            className='space-y-4 mt-4'>
             <FormField
               control={form.control}
-              name="description"
+              name='description'
               render={({ field }) => (
                 <FormItem>
                   <FormControl>
@@ -95,8 +94,8 @@ export const LessonDescriptionForm = ({ initialData, courseId, lessonId }) => {
                 </FormItem>
               )}
             />
-            <div className="flex items-center gap-x-2">
-              <Button disabled={!isValid || isSubmitting} type="submit">
+            <div className='flex items-center gap-x-2'>
+              <Button disabled={!isValid || isSubmitting} type='submit'>
                 Save
               </Button>
             </div>

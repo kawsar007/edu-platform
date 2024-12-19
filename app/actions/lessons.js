@@ -1,7 +1,7 @@
 "use server";
 
 import { Lesson } from "@/model/lesson.modal";
-import { Module } from "@/model/module.model";
+import { Module } from "@/model/module-model";
 import { create } from "@/queries/lessons";
 
 export async function createLessons(data) {
@@ -30,5 +30,13 @@ export async function reOrderLesson(data) {
     }))
   } catch (err) {
     throw new Error(err)
+  }
+}
+
+export async function updateLesson(lessonId, data) {
+  try {
+    await Lesson.findByIdAndUpdate(lessonId, data);
+  } catch (err) {
+    throw new Error(err);
   }
 }
