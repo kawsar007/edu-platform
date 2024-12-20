@@ -4,6 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 
+import { updateLesson } from "@/app/actions/lessons";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -14,11 +15,12 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { VideoPlayer } from "@/components/video-player";
+import { formatDuration } from "@/lib/date";
 import { Pencil } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
-import { VideoPlayer } from "@/components/video-player";
 
 const formSchema = z.object({
   url: z.string().min(1, {
@@ -32,36 +34,57 @@ const formSchema = z.object({
 export const VideoUrlForm = ({ initialData, courseId, lessonId }) => {
   const router = useRouter();
   const [isEditing, setIsEditing] = useState(false);
-
+  const [state, setState] = useState({
+    url: initialData?.url,
+    duration: formatDuration(initialData?.duration)
+  })
   const toggleEdit = () => setIsEditing((current) => !current);
 
   const form = useForm({
     resolver: zodResolver(formSchema),
-    defaultValues: initialData,
+    defaultValues: state,
   });
 
   const { isSubmitting, isValid } = form.formState;
 
   const onSubmit = async (values) => {
     try {
-      toast.success("Lesson updated");
-      toggleEdit();
-      router.refresh();
+      const payload = {};
+      payload["video_url"] = values?.url;
+      const duration = values?.duration;
+      const splitted = duration.split(":");
+
+      if (splitted.length === 3) {
+        const hours = parseInt(splitted[0]);
+        const minutes = parseInt(splitted[1]);
+        const seconds = parseInt(splitted[2]);
+
+        const totalSeconds = hours * 3600 + minutes * 60 + seconds;
+        payload["duration"] = totalSeconds;
+
+        await updateLesson(lessonId, payload);
+        
+        toast.success("Lesson updated");
+        toggleEdit();
+        router.refresh();
+      } else {
+        toast.error("The duration format must be hh:mm:ss");
+      }
     } catch {
       toast.error("Something went wrong");
     }
   };
 
   return (
-    <div className="mt-6 border bg-slate-100 rounded-md p-4">
-      <div className="font-medium flex items-center justify-between">
+    <div className='mt-6 border bg-slate-100 rounded-md p-4'>
+      <div className='font-medium flex items-center justify-between'>
         Video URL
-        <Button variant="ghost" onClick={toggleEdit}>
+        <Button variant='ghost' onClick={toggleEdit}>
           {isEditing ? (
             <>Cancel</>
           ) : (
             <>
-              <Pencil className="h-4 w-4 mr-2" />
+              <Pencil className='h-4 w-4 mr-2' />
               Edit URL
             </>
           )}
@@ -69,11 +92,11 @@ export const VideoUrlForm = ({ initialData, courseId, lessonId }) => {
       </div>
       {!isEditing && (
         <>
-          <p className="text-sm mt-2">
-            {"https://www.youtube.com/embed/Cn4G2lZ_g2I?si=8FxqU8_NU6rYOrG1"}
+          <p className='text-sm mt-2'>
+            {state?.url ? state?.url : "No video URL"}
           </p>
-          <div className="mt-6">
-            <VideoPlayer />
+          <div className='mt-6'>
+            <VideoPlayer url={state?.url} />
           </div>
         </>
       )}
@@ -81,12 +104,11 @@ export const VideoUrlForm = ({ initialData, courseId, lessonId }) => {
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit(onSubmit)}
-            className="space-y-4 mt-4"
-          >
+            className='space-y-4 mt-4'>
             {/* url */}
             <FormField
               control={form.control}
-              name="url"
+              name='url'
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Video URL</FormLabel>
@@ -104,7 +126,7 @@ export const VideoUrlForm = ({ initialData, courseId, lessonId }) => {
             {/* duration */}
             <FormField
               control={form.control}
-              name="duration"
+              name='duration'
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Video Duration</FormLabel>
@@ -119,8 +141,8 @@ export const VideoUrlForm = ({ initialData, courseId, lessonId }) => {
                 </FormItem>
               )}
             />
-            <div className="flex items-center gap-x-2">
-              <Button disabled={!isValid || isSubmitting} type="submit">
+            <div className='flex items-center gap-x-2'>
+              <Button disabled={!isValid || isSubmitting} type='submit'>
                 Save
               </Button>
             </div>
