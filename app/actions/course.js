@@ -22,3 +22,23 @@ export async function updateCourse(courseId, dataToUpdate) {
     throw new Error(err);
   }
 }
+
+export async function changeCoursePublishState(courseId) {
+  try {
+    const publishCourse = await Course.findById(courseId);
+    const response = await Course.findByIdAndUpdate(courseId, {
+      active: !publishCourse.active
+    }, { lean: true })
+   return response.active;
+  } catch (error) {
+    throw new Error(err);
+  }
+}
+
+export async function deleteCourse(courseId) {
+  try {
+    await Course.findByIdAndDelete(courseId);
+  } catch (err) {
+    throw new Error(err);
+  }
+}
