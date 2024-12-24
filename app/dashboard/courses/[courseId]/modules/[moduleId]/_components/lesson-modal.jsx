@@ -7,10 +7,18 @@ import { LessonActions } from "./lesson-action";
 import { LessonDescriptionForm } from "./lesson-description-form";
 import { LessonTitleForm } from "./lesson-title-form";
 import { VideoUrlForm } from "./video-url-form";
-export const LessonModal = ({ open, setOpen, courseId, moduleId, lesson }) => {
-  console.log("Lesson ---> ", lesson);
-
-  const postDelete = () => {};
+export const LessonModal = ({
+  open,
+  setOpen,
+  courseId,
+  moduleId,
+  lesson,
+  onclose,
+}) => {
+  const postDelete = () => {
+    setOpen(false);
+    onclose();
+  };
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -30,7 +38,11 @@ export const LessonModal = ({ open, setOpen, courseId, moduleId, lesson }) => {
                 Back to course setup
               </Link>
               <div className='flex items-center justify-end'>
-                <LessonActions lesson={lesson} moduleId={moduleId} onDelete={postDelete} />
+                <LessonActions
+                  lesson={lesson}
+                  moduleId={moduleId}
+                  onDelete={postDelete}
+                />
               </div>
             </div>
           </div>
