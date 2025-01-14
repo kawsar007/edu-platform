@@ -50,6 +50,6 @@ export const {
           response_type: "code",
         },
       },
-    }) ,
+    }),
   ],
 });

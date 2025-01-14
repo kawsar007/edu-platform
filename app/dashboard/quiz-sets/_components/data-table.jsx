@@ -1,17 +1,16 @@
 "use client";
-import * as React from "react";
 import {
-  ColumnDef,
   flexRender,
   getCoreRowModel,
-  useReactTable,
-  getPaginationRowModel,
-  SortingState,
-  getSortedRowModel,
-  ColumnFiltersState,
   getFilteredRowModel,
+  getPaginationRowModel,
+  getSortedRowModel,
+  useReactTable
 } from "@tanstack/react-table";
+import * as React from "react";
 
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import {
   Table,
   TableBody,
@@ -20,14 +19,16 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import Link from "next/link";
 import { PlusCircle } from "lucide-react";
+import Link from "next/link";
 
 export function DataTable({ columns, data }) {
   const [sorting, setSorting] = React.useState([]);
   const [columnFilters, setColumnFilters] = React.useState([]);
+
+  console.log("Columns ->", columns);
+  console.log("Data ->", data);
+  
 
   const table = useReactTable({
     data,
@@ -42,7 +43,7 @@ export function DataTable({ columns, data }) {
       sorting,
       columnFilters,
     },
-  });
+  });  
 
   return (
     <div>
