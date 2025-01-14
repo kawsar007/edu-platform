@@ -52,11 +52,11 @@ export const columns = [
       );
     },
     cell: ({ row }) => {
-      const isPublished = row.getValue("isPublished") || false;
+      const isPublished = row.getValue("isPublished") || false;      
 
       return (
-        <Badge className={cn("bg-gray-500", isPublished && "bg-success")}>
-          {isPublished ? "Published" : "Unpublished"}
+        <Badge className={cn("bg-gray-500", isPublished === "active" && "bg-teal-500")}>
+          {isPublished === "active" ? "Published" : "Unpublished"}
         </Badge>
       );
     },

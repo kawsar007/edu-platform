@@ -26,10 +26,13 @@ const QuizSets = async () => {
     return {
       id: q.id,
       title: q.title,
-      isPublished: q.active,
+      isPublished: q.status,
       totalQuiz: q.quizIds?.length
     }
   })  
+
+  console.log("mappedQuizSets", mappedQuizSets);
+  
   
   return (
     <div className="p-6">
