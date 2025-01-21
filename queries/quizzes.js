@@ -8,7 +8,7 @@ export async function getAllQuizSets() {
     const quizSets = await Quizset.find().populate({
       path: "quizIds",
       model: Quiz
-    }).lean();    
+    }).lean();
     return replaceMongoIdInArray(quizSets);
   } catch (e) {
     throw new Error(e);

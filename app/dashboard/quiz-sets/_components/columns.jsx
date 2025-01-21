@@ -18,10 +18,9 @@ export const columns = [
     header: ({ column }) => {
       return (
         <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Title <ArrowUpDown className="ml-2 h-4 w-4" />
+          variant='ghost'
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
+          Title <ArrowUpDown className='ml-2 h-4 w-4' />
         </Button>
       );
     },
@@ -31,10 +30,9 @@ export const columns = [
     header: ({ column }) => {
       return (
         <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Total Quiz <ArrowUpDown className="ml-2 h-4 w-4" />
+          variant='ghost'
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
+          Total Quiz <ArrowUpDown className='ml-2 h-4 w-4' />
         </Button>
       );
     },
@@ -44,19 +42,18 @@ export const columns = [
     header: ({ column }) => {
       return (
         <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Published <ArrowUpDown className="ml-2 h-4 w-4" />
+          variant='ghost'
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
+          Published <ArrowUpDown className='ml-2 h-4 w-4' />
         </Button>
       );
     },
     cell: ({ row }) => {
-      const isPublished = row.getValue("isPublished") || false;      
+      const isPublished = row.getValue("isPublished") || false;
 
       return (
-        <Badge className={cn("bg-gray-500", isPublished === "active" && "bg-teal-500")}>
-          {isPublished === "active" ? "Published" : "Unpublished"}
+        <Badge className={cn("bg-gray-500", isPublished && "bg-green-500")}>
+          {isPublished ? "Published" : "Unpublished"}
         </Badge>
       );
     },
@@ -68,15 +65,15 @@ export const columns = [
       return (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="h-4 w-8 p-0">
-              <span className="sr-only">Open Menu</span>
-              <MoreHorizontal className="h-4 w-4" />
+            <Button variant='ghost' className='h-4 w-8 p-0'>
+              <span className='sr-only'>Open Menu</span>
+              <MoreHorizontal className='h-4 w-4' />
             </Button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
+          <DropdownMenuContent align='end'>
             <Link href={`/dashboard/quiz-sets/${id}`}>
               <DropdownMenuItem>
-                <Pencil className="h-4 w-4 mr-2" />
+                <Pencil className='h-4 w-4 mr-2' />
                 Edit
               </DropdownMenuItem>
             </Link>
