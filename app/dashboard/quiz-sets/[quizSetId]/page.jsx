@@ -6,55 +6,10 @@ import { Circle, CircleCheck, Pencil, Trash } from "lucide-react";
 import { AddQuizForm } from "./_components/add-quiz-form";
 import { QuizSetAction } from "./_components/quiz-set-action";
 import { TitleForm } from "./_components/title-form";
-const initialQuizes = [
-  {
-    id: 1,
-    title: "What is HTML ?",
-    options: [
-      {
-        label: "A programming language",
-        isTrue: false,
-      },
-      {
-        label: "A markup language",
-        isTrue: true,
-      },
-      {
-        label: "A famous book",
-        isTrue: false,
-      },
-      {
-        label: "A famous tv show",
-        isTrue: false,
-      },
-    ],
-  },
-  {
-    id: 2,
-    title: "What is Javascript ?",
-    options: [
-      {
-        label: "A programming language",
-        isTrue: true,
-      },
-      {
-        label: "A markup language",
-        isTrue: false,
-      },
-      {
-        label: "A famous book",
-        isTrue: false,
-      },
-      {
-        label: "A famous tv show",
-        isTrue: false,
-      },
-    ],
-  },
-];
+
 const EditQuizSet = async ({ params: { quizSetId } }) => {
   const quizSet = await getQuizSetById(quizSetId);
-  
+
   const quizzes = quizSet.quizIds.map((quiz) => {
     return {
       id: quiz._id.toString(),
@@ -142,8 +97,9 @@ const EditQuizSet = async ({ params: { quizSetId } }) => {
             <div className='max-w-[800px]'>
               <TitleForm
                 initialData={{
-                  title: "Reactive Accelerator",
+                  title: quizSet?.title,
                 }}
+                quizSetId={quizSet?.id}
               />
             </div>
 
