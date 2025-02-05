@@ -28,7 +28,7 @@ export const QuizCardActions = ({ quiz, quizSetId }) => {
           break;
         }
         case "delete-quiz": {
-          await deleteQuizFromQuizSet(quiz.id);
+          await deleteQuizFromQuizSet(quizSetId, quiz.id);
           toast.success(`The quiz has been deleted`);
           router.refresh();
           break;

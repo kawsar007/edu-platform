@@ -37,16 +37,10 @@ export async function addQuizToQuizSet(quizSetId, quizData) {
 };
 
 export async function deleteQuizFromQuizSet(quizSetId, quizId) {
-  console.log("Test Delete --->",
-    quizSetId, quizId
-  );
-
   try {
-    const quizSet = await Quizset.findById(quizId);
-    console.log("quizSet --->", quizSet);
-
+    const quizSet = await Quizset.findById(quizSetId);
     quizSet.quizIds = quizSet?.quizIds.filter(id => id.toString() !== quizId);
-    quizSet.save();
+    await quizSet.save();
   } catch (error) {
     throw new Error(error);
   }
