@@ -81,7 +81,9 @@ const formSchema = z.object({
 
 export const AddQuizForm = ({ quizSetId }) => {
   const router = useRouter();
-  const { quizData } = useQuiz(); // Access the quiz data from context
+  const { quizData, setQuizData } = useQuiz(); // Access the quiz data from context
+
+  console.log("Quiz Data ---> ", quizData);
 
   const form = useForm({
     resolver: zodResolver(formSchema),
@@ -109,11 +111,11 @@ export const AddQuizForm = ({ quizSetId }) => {
   });
 
   const { isSubmitting, isValid, errors } = form.formState;
-  console.log(errors);
-
   // Use useEffect to reset form values when quizData changes
   useEffect(() => {
+    console.log("Quiz Data Updated:", quizData); // Debugging
     if (quizData) {
+      // Populate form with quiz data when editing
       form.reset({
         title: quizData.quiz?.title || "",
         description: quizData.quiz?.description || "",
@@ -135,6 +137,7 @@ export const AddQuizForm = ({ quizSetId }) => {
         },
       });
     } else {
+      // Reset form to default empty state when not editing
       form.reset({
         title: "",
         description: "",
@@ -171,11 +174,10 @@ export const AddQuizForm = ({ quizSetId }) => {
 
       const correctMarked = correctness.filter((c) => c);
 
-      const isOneCorrectMarked = correctMarked.length === 1;
+      // const isOneCorrectMarked = correctMarked.length === 1;
 
-      if (isOneCorrectMarked) {
-        //  Call server action
-        // If editing, update the quiz; otherwise, add a new quiz
+      if (correctMarked.length === 1) {
+        // Call server action
         if (quizData) {
           // Update quiz logic here
           await updateQuizInQuizSet(quizSetId, quizData.quiz.id, values);
@@ -184,27 +186,8 @@ export const AddQuizForm = ({ quizSetId }) => {
           await addQuizToQuizSet(quizSetId, values);
         }
         // Reset the form
-        form.reset({
-          title: "",
-          description: "",
-          optionA: {
-            label: "",
-            isTrue: false,
-          },
-          optionB: {
-            label: "",
-            isTrue: false,
-          },
-          optionC: {
-            label: "",
-            isTrue: false,
-          },
-          optionD: {
-            label: "",
-            isTrue: false,
-          },
-        });
-        // toggleEdit();
+        form.reset();
+        setQuizData(null);
         router.refresh();
       } else {
         toast.error("You must mark only one correct answer.");
@@ -215,9 +198,11 @@ export const AddQuizForm = ({ quizSetId }) => {
   };
 
   return (
-    <div className='mt-6 border bg-gray-50 rounded-md p-4'>
+    <div
+      className='mt-6 border bg-gray-50 rounded-md p-4'
+      key={quizData?.quiz?.id || "new-quiz"}>
       <div className='font-medium flex items-center justify-between'>
-        Add New Quiz
+      {quizData ? 'Update Quiz' : 'Add New Quiz'}
       </div>
 
       {
@@ -427,7 +412,7 @@ export const AddQuizForm = ({ quizSetId }) => {
             {/* --------------- OPTION D ENDS -------- */}
             <div className='flex items-center justify-end gap-x-2'>
               <Button disabled={isSubmitting} type='submit'>
-                Save
+                {quizData ? "Update Quiz" : "Add Quiz"}
               </Button>
             </div>
           </form>

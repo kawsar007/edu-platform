@@ -14,6 +14,7 @@ const EditQuizSet = async ({ params: { quizSetId } }) => {
     return {
       id: quiz._id.toString(),
       title: quiz.title,
+      description: quiz.description,
       options: quiz.options.map((option) => {
         return {
           label: option.text,
@@ -22,7 +23,7 @@ const EditQuizSet = async ({ params: { quizSetId } }) => {
       }),
     };
   });
-
+  
   return (
     <>
       <AlertBanner
