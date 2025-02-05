@@ -10,21 +10,21 @@ import { toast } from "sonner";
 // import { deleteQuiz } from "@/app/actions/quiz"
 
 import { deleteQuizFromQuizSet } from "@/app/actions/quizSet";
+import { useQuiz } from "@/app/context/QuizContext";
 import { useRouter } from "next/navigation";
 
 export const QuizCardActions = ({ quiz, quizSetId }) => {
   const [action, setAction] = useState(null);
   const router = useRouter();
-
-  console.log("Quiz Id --->", quiz.id);
-  console.log("QuizSetId --->", quizSetId);
+  const { setQuizData } = useQuiz();
 
   async function handleSubmit(event) {
     event.preventDefault();
     try {
       switch (action) {
         case "edit-quiz": {
-          console.log(quiz.id, quizSetId);
+          setQuizData({ quiz, quizSetId }); // Store data in context
+          console.log("Test Quiz ID --->", quiz.id, quizSetId);
           break;
         }
         case "delete-quiz": {

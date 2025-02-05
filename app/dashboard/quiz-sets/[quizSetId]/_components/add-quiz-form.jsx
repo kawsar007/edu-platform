@@ -1,12 +1,13 @@
 "use client";
 
-import * as z from "zod";
-// import axios from "axios";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useEffect } from "react"; // Import useEffect
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
+import * as z from "zod";
 
-import { addQuizToQuizSet } from "@/app/actions/quizSet";
+import { addQuizToQuizSet, updateQuizInQuizSet } from "@/app/actions/quizSet";
+import { useQuiz } from "@/app/context/QuizContext";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
@@ -80,6 +81,7 @@ const formSchema = z.object({
 
 export const AddQuizForm = ({ quizSetId }) => {
   const router = useRouter();
+  const { quizData } = useQuiz(); // Access the quiz data from context
 
   const form = useForm({
     resolver: zodResolver(formSchema),
@@ -109,6 +111,53 @@ export const AddQuizForm = ({ quizSetId }) => {
   const { isSubmitting, isValid, errors } = form.formState;
   console.log(errors);
 
+  // Use useEffect to reset form values when quizData changes
+  useEffect(() => {
+    if (quizData) {
+      form.reset({
+        title: quizData.quiz?.title || "",
+        description: quizData.quiz?.description || "",
+        optionA: {
+          label: quizData.quiz?.options[0]?.label || "",
+          isTrue: quizData.quiz?.options[0]?.isTrue || false,
+        },
+        optionB: {
+          label: quizData.quiz?.options[1]?.label || "",
+          isTrue: quizData.quiz?.options[1]?.isTrue || false,
+        },
+        optionC: {
+          label: quizData.quiz?.options[2]?.label || "",
+          isTrue: quizData.quiz?.options[2]?.isTrue || false,
+        },
+        optionD: {
+          label: quizData.quiz?.options[3]?.label || "",
+          isTrue: quizData.quiz?.options[3]?.isTrue || false,
+        },
+      });
+    } else {
+      form.reset({
+        title: "",
+        description: "",
+        optionA: {
+          label: "",
+          isTrue: false,
+        },
+        optionB: {
+          label: "",
+          isTrue: false,
+        },
+        optionC: {
+          label: "",
+          isTrue: false,
+        },
+        optionD: {
+          label: "",
+          isTrue: false,
+        },
+      });
+    }
+  }, [quizData, form]);
+
   const onSubmit = async (values) => {
     try {
       console.log({ values });
@@ -126,7 +175,14 @@ export const AddQuizForm = ({ quizSetId }) => {
 
       if (isOneCorrectMarked) {
         //  Call server action
-        await addQuizToQuizSet(quizSetId, values);
+        // If editing, update the quiz; otherwise, add a new quiz
+        if (quizData) {
+          // Update quiz logic here
+          await updateQuizInQuizSet(quizSetId, quizData.quiz.id, values);
+        } else {
+          // Add new quiz logic
+          await addQuizToQuizSet(quizSetId, values);
+        }
         // Reset the form
         form.reset({
           title: "",
@@ -153,11 +209,6 @@ export const AddQuizForm = ({ quizSetId }) => {
       } else {
         toast.error("You must mark only one correct answer.");
       }
-
-      // if (correctness.filter((item) => item === true).length !== 1) {
-      //   toast.error("Please select only one correct option");
-      //   return;
-      // }
     } catch (error) {
       toast.error("Something went wrong");
     }

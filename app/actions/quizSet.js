@@ -2,7 +2,7 @@
 
 import { getSlug } from "@/lib/convertData";
 import { Quizset } from "@/model/quizset-model";
-import { createQuiz } from "@/queries/quizzes";
+import { createQuiz, updateQuiz } from "@/queries/quizzes";
 
 export async function updateQuizSet(quizset, dataToUpdate) {
   try {
@@ -53,5 +53,29 @@ export async function doCreateQuizSet (data) {
     return createdQuizSet._id.toString();
   } catch (error) {
     throw new Error(error);
+  }
+}
+
+export async function updateQuizInQuizSet(quizSetId, quizId, quizData) {
+  try {
+    const transformedQuizData = {
+      title: quizData.title,
+      description: quizData.description,
+      slug: getSlug(quizData.title),
+      options: [
+        { text: quizData.optionA.label, is_correct: quizData.optionA.isTrue },
+        { text: quizData.optionB.label, is_correct: quizData.optionB.isTrue },
+        { text: quizData.optionC.label, is_correct: quizData.optionC.isTrue },
+        { text: quizData.optionD.label, is_correct: quizData.optionD.isTrue }
+      ]
+    };
+
+    // Update the quiz document
+    await updateQuiz(quizId, transformedQuizData);
+
+    // No need to update quizSet since the reference remains the same
+    return { success: true };
+  } catch (error) {
+    throw new Error(error.message || "Failed to update quiz");
   }
 }

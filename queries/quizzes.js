@@ -32,3 +32,7 @@ export async function createQuiz(quizData) {
     throw new Error(error);
   }
 }
+
+export async function updateQuiz(quizId, updateData) {
+  return Quiz.findByIdAndUpdate(quizId, updateData, { new: true });
+}
