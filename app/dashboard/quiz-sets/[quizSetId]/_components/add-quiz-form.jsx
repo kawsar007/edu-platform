@@ -83,8 +83,6 @@ export const AddQuizForm = ({ quizSetId }) => {
   const router = useRouter();
   const { quizData, setQuizData } = useQuiz(); // Access the quiz data from context
 
-  console.log("Quiz Data ---> ", quizData);
-
   const form = useForm({
     resolver: zodResolver(formSchema),
     mode: "all",

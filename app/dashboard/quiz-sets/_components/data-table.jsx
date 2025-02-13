@@ -22,9 +22,7 @@ import {
 import { PlusCircle } from "lucide-react";
 import Link from "next/link";
 
-export function DataTable({ columns, data }) {
-  console.log("Data ---> ", data);
-  
+export function DataTable({ columns, data }) {  
   const [sorting, setSorting] = React.useState([]);
   const [columnFilters, setColumnFilters] = React.useState([]);
 

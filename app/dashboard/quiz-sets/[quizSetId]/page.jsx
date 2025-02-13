@@ -9,9 +9,6 @@ import { TitleForm } from "./_components/title-form";
 
 const EditQuizSet = async ({ params: { quizSetId } }) => {
   const quizSet = await getQuizSetById(quizSetId);
-
-  console.log("Quiz Set --->", quizSet.active);
-
   const quizzes = quizSet.quizIds.map((quiz) => {
     return {
       id: quiz._id.toString(),

@@ -1,6 +1,6 @@
 "use client";
 
-import { changeQuizPublishState } from "@/app/actions/quizSet";
+import { changeQuizPublishState, deleteQuizset } from "@/app/actions/quizSet";
 import { Button } from "@/components/ui/button";
 import { Trash } from "lucide-react";
 import { useRouter } from "next/navigation";
@@ -22,8 +22,19 @@ export const QuizSetAction = ({ quizSetId, isActive }) => {
           toast.success("The Course has been updated successfully.");
           router.refresh();
           break;
+        case "delete":
+          if (published) {
+            toast.error(
+              "A published quiz set can't be deleted. First unpublish it, then you can delete it.",
+            );
+          } else {
+            await deleteQuizset(quizSetId);
+            toast.success("The quiz set has been deleted successfully.");
+            router.push(`/dashboard/quiz-sets`);
+          }
+          break;
         default:
-          throw new Error("Invalid Quiz Active");
+          throw new Error("Invalid Quiz Set Active");
       }
     } catch (err) {
       toast.error(err.message);
@@ -40,7 +51,7 @@ export const QuizSetAction = ({ quizSetId, isActive }) => {
           {published ? "Unpublish" : "Publish"}
         </Button>
 
-        <Button size='sm'>
+        <Button size='sm' onClick={() => setAction("delete")}>
           <Trash className='h-4 w-4' />
         </Button>
       </div>

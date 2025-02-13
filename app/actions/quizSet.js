@@ -91,3 +91,11 @@ export async function changeQuizPublishState(quizSetId) {
     throw new Error(err);
   }
 }
+
+export async function deleteQuizset(quizSetId) {
+  try {
+    await Quizset.findByIdAndDelete(quizSetId);
+  } catch (err) {
+    throw new Error(err);
+  }
+}

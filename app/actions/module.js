@@ -7,7 +7,6 @@ import * as mongoose from 'mongoose';
 
 
 export async function createModule(data) {
-  console.log("Action Data ---> ", data);
 
   try {
     const title = data.get("title");
