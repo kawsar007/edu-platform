@@ -30,7 +30,7 @@ export async function changeCoursePublishState(courseId) {
       active: !publishCourse.active
     }, { lean: true })
    return response.active;
-  } catch (error) {
+  } catch (err) {
     throw new Error(err);
   }
 }

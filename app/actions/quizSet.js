@@ -79,3 +79,15 @@ export async function updateQuizInQuizSet(quizSetId, quizId, quizData) {
     throw new Error(error.message || "Failed to update quiz");
   }
 }
+
+export async function changeQuizPublishState(quizSetId) {
+  try {
+    const publishCourse = await Quizset.findById(quizSetId);
+    const response = await Quizset.findByIdAndUpdate(quizSetId, {
+      active: !publishCourse.active
+    }, { lean: true })
+   return response.active;
+  } catch (err) {
+    throw new Error(err);
+  }
+}
