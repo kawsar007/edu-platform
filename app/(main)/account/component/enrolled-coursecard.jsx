@@ -1,5 +1,7 @@
+import { CourseProgress } from "@/components/course-progress";
 import { Badge } from "@/components/ui/badge";
 import { getCategoryDetails } from "@/queries/categories";
+import { getCourseDetails } from "@/queries/courses";
 import { getAReport } from "@/queries/reports";
 import { BookOpen } from "lucide-react";
 import Image from "next/image";
@@ -20,15 +22,25 @@ const EnrolledCourseCard = async ({ enrollment }) => {
   };
   const report = await getAReport(filter);
 
+  const courseDetails = await getCourseDetails(enrollment?.course?._id);
+  const totalModuleCount = courseDetails?.modules?.length;
+
   // Total Completed Modules
-  const totalCompletedModules = report?.totalCompletedModeules?.length;
+  const totalCompletedModules = report?.totalCompletedModeules
+    ? report?.totalCompletedModeules?.length
+    : 0;
+
+  // Total Progress
+  const totalProgress = totalModuleCount
+    ? (totalCompletedModules / totalModuleCount) * 100
+    : 0;
 
   // Get all Quizzes and Assignments
   const quizzes = report?.quizAssessment?.assessments;
-  const totalQuizzes = quizzes?.length;
+  const totalQuizzes = quizzes?.length ?? 0;
 
   // Find attempted qiuzzes
-  const quizzesTaken = quizzes.filter((q) => q.attempted);
+  const quizzesTaken = quizzes ? quizzes.filter((q) => q.attempted) : [];
 
   // Find how many quizzes answered correct
   const totalCorrect = quizzesTaken
@@ -42,10 +54,8 @@ const EnrolledCourseCard = async ({ enrollment }) => {
     .flat();
 
   const marksFromQuizzes = totalCorrect?.length * 5;
-  const otherMarks = report?.quizAssessment?.otherMarks;
+  const otherMarks = report?.quizAssessment?.otherMarks ?? 0;
   const totalMarks = marksFromQuizzes + otherMarks;
-
-  console.log("Total Correct ---> ", totalCorrect);
 
   return (
     <div className='group hover:shadow-sm transition overflow-hidden border rounded-lg p-3 h-full'>
@@ -116,6 +126,13 @@ const EnrolledCourseCard = async ({ enrollment }) => {
             {totalMarks}
           </p>
         </div>
+        {
+          <CourseProgress
+            value={totalProgress}
+            variant={100 === 100 ? "success" : ""}
+            size='sm'
+          />
+        }
       </div>
     </div>
   );
