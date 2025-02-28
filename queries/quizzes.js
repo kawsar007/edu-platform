@@ -3,9 +3,15 @@ import { Quizset } from "@/model/quizset-model";
 import { Quiz } from "@/model/quizzes-model";
 
 
-export async function getAllQuizSets() {
+export async function getAllQuizSets(exclideUnPublished) {
   try {
-    const quizSets = await Quizset.find().lean();
+    let quizSets = [];
+    if (exclideUnPublished) {
+      quizSets = await Quizset.find({ active: true }).lean();
+    } else {
+      quizSets = await Quizset.find().lean();
+    }
+    // const quizSets = await Quizset.find().lean();
     return replaceMongoIdInArray(quizSets);
   } catch (e) {
     throw new Error(e);
