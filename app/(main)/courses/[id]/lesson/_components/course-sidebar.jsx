@@ -1,5 +1,4 @@
 "use client";
-import { useState } from "react";
 import { CourseProgress } from "@/components/course-progress";
 import {
   Accordion,
@@ -7,13 +6,11 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { CheckCircle } from "lucide-react";
-import { PlayCircle } from "lucide-react";
-import { Lock } from "lucide-react";
-import Link from "next/link";
-import { ReviewModal } from "./review-modal";
+import { CheckCircle, Lock, PlayCircle } from "lucide-react";
+import { useState } from "react";
+import { DownloadCertificate } from "./download-certificate";
+import { GiveReview } from "./give-review";
 
 export const CourseSidebar = () => {
   const [isReviewModalOpen, setIsReviewModalOpen] = useState(false);
@@ -21,43 +18,41 @@ export const CourseSidebar = () => {
   const isCompleted = true;
   return (
     <>
-      <div className="h-full border-r flex flex-col overflow-y-auto shadow-sm">
-        <div className="p-8 flex flex-col border-b">
-          <h1 className="font-semibold">Reactive Accelerator</h1>
+      <div className='h-full border-r flex flex-col overflow-y-auto shadow-sm'>
+        <div className='p-8 flex flex-col border-b'>
+          <h1 className='font-semibold'>Reactive Accelerator</h1>
           {/* Check purchase */}
           {
-            <div className="mt-10">
-              <CourseProgress variant="success" value={80} />
+            <div className='mt-10'>
+              <CourseProgress variant='success' value={80} />
             </div>
           }
         </div>
         <Accordion
-          defaultValue="item-1"
-          type="single"
+          defaultValue='item-1'
+          type='single'
           collapsible
-          className="w-full px-6"
-        >
+          className='w-full px-6'>
           {/* item */}
-          <AccordionItem className="border-0" value="item-1">
+          <AccordionItem className='border-0' value='item-1'>
             <AccordionTrigger>Introduction </AccordionTrigger>
             <AccordionContent>
-              <div className="flex flex-col w-full gap-3">
+              <div className='flex flex-col w-full gap-3'>
                 {/* active and completed */}
                 <button
-                  type="button"
+                  type='button'
                   className={cn(
                     "flex items-center gap-x-2 text-slate-500 text-sm font-[500]  transition-all hover:text-slate-600 ",
                     isActive && "text-slate-700  hover:text-slate-700",
-                    isCompleted && "text-emerald-700 hover:text-emerald-700"
-                  )}
-                >
-                  <div className="flex items-center gap-x-2">
+                    isCompleted && "text-emerald-700 hover:text-emerald-700",
+                  )}>
+                  <div className='flex items-center gap-x-2'>
                     <CheckCircle
                       size={16}
                       className={cn(
                         "text-slate-500",
                         isActive && "text-slate-700",
-                        isCompleted && "text-emerald-700"
+                        isCompleted && "text-emerald-700",
                       )}
                     />
                     Introduction
@@ -65,21 +60,20 @@ export const CourseSidebar = () => {
                 </button>
                 {/* not active and completed */}
                 <button
-                  type="button"
+                  type='button'
                   className={cn(
                     "flex items-center gap-x-2 text-slate-500 text-sm font-[500]  transition-all hover:text-slate-600 ",
                     false && "text-slate-700  hover:text-slate-700",
                     isCompleted &&
                       false &&
-                      "text-emerald-700 hover:text-emerald-700"
-                  )}
-                >
-                  <div className="flex items-center gap-x-2">
+                      "text-emerald-700 hover:text-emerald-700",
+                  )}>
+                  <div className='flex items-center gap-x-2'>
                     <PlayCircle
                       size={16}
                       className={cn(
                         "text-slate-500",
-                        isActive && "text-slate-700"
+                        isActive && "text-slate-700",
                       )}
                     />
                     What is React ?
@@ -87,21 +81,20 @@ export const CourseSidebar = () => {
                 </button>
                 {/* lock*/}
                 <button
-                  type="button"
+                  type='button'
                   className={cn(
                     "flex items-center gap-x-2 text-slate-500 text-sm font-[500]  transition-all hover:text-slate-600",
                     false && "text-slate-700  hover:text-slate-700",
                     isCompleted &&
                       false &&
-                      "text-emerald-700 hover:text-emerald-700"
-                  )}
-                >
-                  <div className="flex items-center gap-x-2">
+                      "text-emerald-700 hover:text-emerald-700",
+                  )}>
+                  <div className='flex items-center gap-x-2'>
                     <Lock
                       size={16}
                       className={cn(
                         "text-slate-500",
-                        isActive && "text-slate-700"
+                        isActive && "text-slate-700",
                       )}
                     />
                     What is React ?
@@ -113,26 +106,25 @@ export const CourseSidebar = () => {
           {/* item ends */}
 
           {/* item */}
-          <AccordionItem className="border-0" value="item-2">
+          <AccordionItem className='border-0' value='item-2'>
             <AccordionTrigger>Foundational React JS </AccordionTrigger>
             <AccordionContent>
-              <div className="flex flex-col w-full gap-3">
+              <div className='flex flex-col w-full gap-3'>
                 {/* active and completed */}
                 <button
-                  type="button"
+                  type='button'
                   className={cn(
                     "flex items-center gap-x-2 text-slate-500 text-sm font-[500]  transition-all hover:text-slate-600 ",
                     isActive && "text-slate-700  hover:text-slate-700",
-                    isCompleted && "text-emerald-700 hover:text-emerald-700"
-                  )}
-                >
-                  <div className="flex items-center gap-x-2">
+                    isCompleted && "text-emerald-700 hover:text-emerald-700",
+                  )}>
+                  <div className='flex items-center gap-x-2'>
                     <CheckCircle
                       size={16}
                       className={cn(
                         "text-slate-500",
                         isActive && "text-slate-700",
-                        isCompleted && "text-emerald-700"
+                        isCompleted && "text-emerald-700",
                       )}
                     />
                     Introduction
@@ -140,21 +132,20 @@ export const CourseSidebar = () => {
                 </button>
                 {/* not active and completed */}
                 <button
-                  type="button"
+                  type='button'
                   className={cn(
                     "flex items-center gap-x-2 text-slate-500 text-sm font-[500]  transition-all hover:text-slate-600 ",
                     false && "text-slate-700  hover:text-slate-700",
                     isCompleted &&
                       false &&
-                      "text-emerald-700 hover:text-emerald-700"
-                  )}
-                >
-                  <div className="flex items-center gap-x-2">
+                      "text-emerald-700 hover:text-emerald-700",
+                  )}>
+                  <div className='flex items-center gap-x-2'>
                     <PlayCircle
                       size={16}
                       className={cn(
                         "text-slate-500",
-                        isActive && "text-slate-700"
+                        isActive && "text-slate-700",
                       )}
                     />
                     What is React ?
@@ -162,21 +153,20 @@ export const CourseSidebar = () => {
                 </button>
                 {/* lock*/}
                 <button
-                  type="button"
+                  type='button'
                   className={cn(
                     "flex items-center gap-x-2 text-slate-500 text-sm font-[500]  transition-all hover:text-slate-600",
                     false && "text-slate-700  hover:text-slate-700",
                     isCompleted &&
                       false &&
-                      "text-emerald-700 hover:text-emerald-700"
-                  )}
-                >
-                  <div className="flex items-center gap-x-2">
+                      "text-emerald-700 hover:text-emerald-700",
+                  )}>
+                  <div className='flex items-center gap-x-2'>
                     <Lock
                       size={16}
                       className={cn(
                         "text-slate-500",
-                        isActive && "text-slate-700"
+                        isActive && "text-slate-700",
                       )}
                     />
                     What is React ?
@@ -188,26 +178,25 @@ export const CourseSidebar = () => {
           {/* item ends */}
 
           {/* item */}
-          <AccordionItem className="border-0" value="item-3">
+          <AccordionItem className='border-0' value='item-3'>
             <AccordionTrigger>Advanced React JS </AccordionTrigger>
             <AccordionContent>
-              <div className="flex flex-col w-full gap-3">
+              <div className='flex flex-col w-full gap-3'>
                 {/* active and completed */}
                 <button
-                  type="button"
+                  type='button'
                   className={cn(
                     "flex items-center gap-x-2 text-slate-500 text-sm font-[500]  transition-all hover:text-slate-600 ",
                     isActive && "text-slate-700  hover:text-slate-700",
-                    isCompleted && "text-emerald-700 hover:text-emerald-700"
-                  )}
-                >
-                  <div className="flex items-center gap-x-2">
+                    isCompleted && "text-emerald-700 hover:text-emerald-700",
+                  )}>
+                  <div className='flex items-center gap-x-2'>
                     <CheckCircle
                       size={16}
                       className={cn(
                         "text-slate-500",
                         isActive && "text-slate-700",
-                        isCompleted && "text-emerald-700"
+                        isCompleted && "text-emerald-700",
                       )}
                     />
                     Introduction
@@ -215,21 +204,20 @@ export const CourseSidebar = () => {
                 </button>
                 {/* not active and completed */}
                 <button
-                  type="button"
+                  type='button'
                   className={cn(
                     "flex items-center gap-x-2 text-slate-500 text-sm font-[500]  transition-all hover:text-slate-600 ",
                     false && "text-slate-700  hover:text-slate-700",
                     isCompleted &&
                       false &&
-                      "text-emerald-700 hover:text-emerald-700"
-                  )}
-                >
-                  <div className="flex items-center gap-x-2">
+                      "text-emerald-700 hover:text-emerald-700",
+                  )}>
+                  <div className='flex items-center gap-x-2'>
                     <PlayCircle
                       size={16}
                       className={cn(
                         "text-slate-500",
-                        isActive && "text-slate-700"
+                        isActive && "text-slate-700",
                       )}
                     />
                     What is React ?
@@ -237,21 +225,20 @@ export const CourseSidebar = () => {
                 </button>
                 {/* lock*/}
                 <button
-                  type="button"
+                  type='button'
                   className={cn(
                     "flex items-center gap-x-2 text-slate-500 text-sm font-[500]  transition-all hover:text-slate-600",
                     false && "text-slate-700  hover:text-slate-700",
                     isCompleted &&
                       false &&
-                      "text-emerald-700 hover:text-emerald-700"
-                  )}
-                >
-                  <div className="flex items-center gap-x-2">
+                      "text-emerald-700 hover:text-emerald-700",
+                  )}>
+                  <div className='flex items-center gap-x-2'>
                     <Lock
                       size={16}
                       className={cn(
                         "text-slate-500",
-                        isActive && "text-slate-700"
+                        isActive && "text-slate-700",
                       )}
                     />
                     What is React ?
@@ -263,26 +250,25 @@ export const CourseSidebar = () => {
           {/* item ends */}
 
           {/* item */}
-          <AccordionItem className="border-0" value="item-4">
+          <AccordionItem className='border-0' value='item-4'>
             <AccordionTrigger>Project: Ecommerce Application</AccordionTrigger>
             <AccordionContent>
-              <div className="flex flex-col w-full gap-3">
+              <div className='flex flex-col w-full gap-3'>
                 {/* active and completed */}
                 <button
-                  type="button"
+                  type='button'
                   className={cn(
                     "flex items-center gap-x-2 text-slate-500 text-sm font-[500]  transition-all hover:text-slate-600 ",
                     isActive && "text-slate-700  hover:text-slate-700",
-                    isCompleted && "text-emerald-700 hover:text-emerald-700"
-                  )}
-                >
-                  <div className="flex items-center gap-x-2">
+                    isCompleted && "text-emerald-700 hover:text-emerald-700",
+                  )}>
+                  <div className='flex items-center gap-x-2'>
                     <CheckCircle
                       size={16}
                       className={cn(
                         "text-slate-500",
                         isActive && "text-slate-700",
-                        isCompleted && "text-emerald-700"
+                        isCompleted && "text-emerald-700",
                       )}
                     />
                     Introduction
@@ -290,21 +276,20 @@ export const CourseSidebar = () => {
                 </button>
                 {/* not active and completed */}
                 <button
-                  type="button"
+                  type='button'
                   className={cn(
                     "flex items-center gap-x-2 text-slate-500 text-sm font-[500]  transition-all hover:text-slate-600 ",
                     false && "text-slate-700  hover:text-slate-700",
                     isCompleted &&
                       false &&
-                      "text-emerald-700 hover:text-emerald-700"
-                  )}
-                >
-                  <div className="flex items-center gap-x-2">
+                      "text-emerald-700 hover:text-emerald-700",
+                  )}>
+                  <div className='flex items-center gap-x-2'>
                     <PlayCircle
                       size={16}
                       className={cn(
                         "text-slate-500",
-                        isActive && "text-slate-700"
+                        isActive && "text-slate-700",
                       )}
                     />
                     What is React ?
@@ -312,21 +297,20 @@ export const CourseSidebar = () => {
                 </button>
                 {/* lock*/}
                 <button
-                  type="button"
+                  type='button'
                   className={cn(
                     "flex items-center gap-x-2 text-slate-500 text-sm font-[500]  transition-all hover:text-slate-600",
                     false && "text-slate-700  hover:text-slate-700",
                     isCompleted &&
                       false &&
-                      "text-emerald-700 hover:text-emerald-700"
-                  )}
-                >
-                  <div className="flex items-center gap-x-2">
+                      "text-emerald-700 hover:text-emerald-700",
+                  )}>
+                  <div className='flex items-center gap-x-2'>
                     <Lock
                       size={16}
                       className={cn(
                         "text-slate-500",
-                        isActive && "text-slate-700"
+                        isActive && "text-slate-700",
                       )}
                     />
                     What is React ?
@@ -338,26 +322,25 @@ export const CourseSidebar = () => {
           {/* item ends */}
 
           {/* item */}
-          <AccordionItem className="border-0" value="item-3">
+          <AccordionItem className='border-0' value='item-3'>
             <AccordionTrigger>Advanced React JS </AccordionTrigger>
             <AccordionContent>
-              <div className="flex flex-col w-full gap-3">
+              <div className='flex flex-col w-full gap-3'>
                 {/* active and completed */}
                 <button
-                  type="button"
+                  type='button'
                   className={cn(
                     "flex items-center gap-x-2 text-slate-500 text-sm font-[500]  transition-all hover:text-slate-600 ",
                     isActive && "text-slate-700  hover:text-slate-700",
-                    isCompleted && "text-emerald-700 hover:text-emerald-700"
-                  )}
-                >
-                  <div className="flex items-center gap-x-2">
+                    isCompleted && "text-emerald-700 hover:text-emerald-700",
+                  )}>
+                  <div className='flex items-center gap-x-2'>
                     <CheckCircle
                       size={16}
                       className={cn(
                         "text-slate-500",
                         isActive && "text-slate-700",
-                        isCompleted && "text-emerald-700"
+                        isCompleted && "text-emerald-700",
                       )}
                     />
                     Introduction
@@ -365,21 +348,20 @@ export const CourseSidebar = () => {
                 </button>
                 {/* not active and completed */}
                 <button
-                  type="button"
+                  type='button'
                   className={cn(
                     "flex items-center gap-x-2 text-slate-500 text-sm font-[500]  transition-all hover:text-slate-600 ",
                     false && "text-slate-700  hover:text-slate-700",
                     isCompleted &&
                       false &&
-                      "text-emerald-700 hover:text-emerald-700"
-                  )}
-                >
-                  <div className="flex items-center gap-x-2">
+                      "text-emerald-700 hover:text-emerald-700",
+                  )}>
+                  <div className='flex items-center gap-x-2'>
                     <PlayCircle
                       size={16}
                       className={cn(
                         "text-slate-500",
-                        isActive && "text-slate-700"
+                        isActive && "text-slate-700",
                       )}
                     />
                     What is React ?
@@ -387,21 +369,20 @@ export const CourseSidebar = () => {
                 </button>
                 {/* lock*/}
                 <button
-                  type="button"
+                  type='button'
                   className={cn(
                     "flex items-center gap-x-2 text-slate-500 text-sm font-[500]  transition-all hover:text-slate-600",
                     false && "text-slate-700  hover:text-slate-700",
                     isCompleted &&
                       false &&
-                      "text-emerald-700 hover:text-emerald-700"
-                  )}
-                >
-                  <div className="flex items-center gap-x-2">
+                      "text-emerald-700 hover:text-emerald-700",
+                  )}>
+                  <div className='flex items-center gap-x-2'>
                     <Lock
                       size={16}
                       className={cn(
                         "text-slate-500",
-                        isActive && "text-slate-700"
+                        isActive && "text-slate-700",
                       )}
                     />
                     What is React ?
@@ -412,20 +393,13 @@ export const CourseSidebar = () => {
           </AccordionItem>
           {/* item ends */}
 
-          <Button className="w-full mt-6">
-            <>Download Certificate</>
-          </Button>
-
-          <Button
-            onClick={() => setIsReviewModalOpen(true)}
-            variant="outline"
-            className="w-full mt-6"
-          >
-            Give Review
-          </Button>
+          
         </Accordion>
+        <div className='w-full px-6'>
+          <DownloadCertificate />
+          <GiveReview />
+        </div>
       </div>
-      <ReviewModal open={isReviewModalOpen} setOpen={setIsReviewModalOpen} />
     </>
   );
 };
