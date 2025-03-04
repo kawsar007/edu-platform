@@ -1,27 +1,22 @@
-import { CourseProgress } from "@/components/course-progress";
-import { cn } from "@/lib/utils";
-import { PlayCircle } from "lucide-react";
-import { Lock } from "lucide-react";
-import { CheckCircle } from "lucide-react";
-import { CourseSidebarMobile } from "./_components/course-sidebar-mobile";
 import { CourseSidebar } from "./_components/course-sidebar";
+import { CourseSidebarMobile } from "./_components/course-sidebar-mobile";
 
 const CourseLayout = ({ children }) => {
   return (
-    <div className="">
-      <div className="h-[80px] lg:pl-96 fixed inset-y-0 w-full z-50">
-        <div className="p-4 border-b h-full flex items-center bg-white shadow-sm">
+    <div className=''>
+      <div className='h-[80px] lg:pl-96 fixed top-[60px] inset-y-0 w-full z-10'>
+        <div className='p-4 lg:hidden border-b h-full flex items-center bg-white shadow-sm relative'>
           {/* Course Sidebar For Mobile */}
           <CourseSidebarMobile />
           {/* <NavbarRoutes /> */}
         </div>
       </div>
-      <div className="hidden lg:flex h-full w-96 flex-col fixed inset-y-0 z-50">
-        {/* sidebar starts */}
-        <CourseSidebar />
-        {/* sidebar ends */}
+      <div className="grid grid-cols-1 lg:grid-cols-12">
+        <div className='hidden lg:flex h-full w-96 flex-col inset-y-0 z-50'>
+          <CourseSidebar />
+        </div>
+        <main className='lg:pl-96 pt-[80px] lg:pt-[20px] h-full col-span-10 px-4'>{children}</main>
       </div>
-      <main className="lg:pl-96 pt-[80px] h-full">{children}</main>
     </div>
   );
 };
