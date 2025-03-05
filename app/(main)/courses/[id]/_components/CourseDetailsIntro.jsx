@@ -7,11 +7,10 @@ import Link from "next/link";
 import { auth } from "@/auth";
 import { hasEnrollmentsForCourse } from "@/queries/enrollments";
 import { getUserByEmail } from "@/queries/users";
-import { redirect } from "next/navigation";
 
 const CourseDetailsIntro = async ({ course }) => {
   const session = await auth();
-  if (!session?.user) redirect("/login");
+  // if (!session?.user) redirect("/login");
   const loggedInUser = await getUserByEmail(session?.user?.email);
 
   const hasEnrollment = await hasEnrollmentsForCourse(
@@ -36,7 +35,7 @@ const CourseDetailsIntro = async ({ course }) => {
               </p>
               <div className='mt-6 flex items-center justify-center flex-wrap gap-3'>
                 {hasEnrollment ? (
-                  <Link href='' className={cn(buttonVariants({ size: "lg" }))}>
+                  <Link href={`/courses/${course?.id}/lesson`} className={cn(buttonVariants({ size: "lg" }))}>
                     Access Course
                   </Link>
                 ) : (
