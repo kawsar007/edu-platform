@@ -1,11 +1,46 @@
 // "use client";
 import { CourseProgress } from "@/components/course-progress";
+import { getLoggedInUser } from "@/lib/loggedin-user";
+import { Watch } from "@/model/watch-model";
+import { getCourseDetails } from "@/queries/courses";
 import { DownloadCertificate } from "./download-certificate";
 import { GiveReview } from "./give-review";
 import { SidebarModules } from "./sidebar-modules";
 
-export const CourseSidebar = () => {
-  
+export const CourseSidebar = async ({ courseId }) => {
+ 
+
+  const course = await getCourseDetails(courseId);
+  const loggedinUser = await getLoggedInUser();
+  console.log("User Id --->", loggedinUser.id);
+  const updatedModules = await Promise.all(
+    course.modules.map(async (module) => {
+      const moduleId = module._id.toString();
+      const lessons = module?.lessonIds;
+
+      const updatedLessons = await Promise.all(
+        lessons.map(async (lesson) => {
+          const lessonId = lesson._id.toString();
+          const watch = await Watch.findOne({
+            lesson: lessonId,
+            module: moduleId,
+            user: loggedinUser.id,
+          });
+
+          if (watch?.state === 'completed') {
+            console.log(`1. The lesson ${lesson.title} has completed`);
+            
+            lesson.state = "completed";
+          }
+          return lesson;
+        }),
+      );
+      return module;
+    }),
+  );
+
+  console.log("Updated Modules ---> ", updatedModules);
+
   return (
     <>
       <div className='h-full border-r flex flex-col overflow-y-auto shadow-sm'>
